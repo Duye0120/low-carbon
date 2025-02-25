@@ -1,0 +1,46 @@
+{
+  "pages": [
+    {
+      "path": "pages/index",
+      "style": {
+        "navigationBarTitleText": "uni-app"
+      }
+    }
+  ],
+  "subPackages": [
+    {
+      "root": "user",
+      "pages": [
+        {
+          "path": "views/index",
+          "style": {
+            "navigationBarTitleText": "个人中心"
+          }
+        }
+      ]
+    },
+	{
+		"root": "news",
+		"pages": [
+			{
+				"path": "views/index",
+				"style": {
+					"navigationBarTitleText": "资讯中心"
+				}
+			},
+			{
+				"path": "views/detail",
+				"style": {
+					"navigationBarTitleText": "图文详情"
+				}
+			}
+		]
+	}
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  }
+}
