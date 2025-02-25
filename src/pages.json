@@ -3,7 +3,13 @@
     {
       "path": "pages/index",
       "style": {
-        "navigationBarTitleText": "uni-app"
+        "navigationBarTitleText": "低碳生活"
+      }
+    },
+    {
+      "path": "pages/main/index",
+      "style": {
+        "navigationBarTitleText": "低碳生活"
       }
     }
   ],
@@ -19,27 +25,27 @@
         }
       ]
     },
-	{
-		"root": "news",
-		"pages": [
-			{
-				"path": "views/index",
-				"style": {
-					"navigationBarTitleText": "资讯中心"
-				}
-			},
-			{
-				"path": "views/detail",
-				"style": {
-					"navigationBarTitleText": "图文详情"
-				}
-			}
-		]
-	}
+    {
+      "root": "news",
+      "pages": [
+        {
+          "path": "views/index",
+          "style": {
+            "navigationBarTitleText": "资讯中心"
+          }
+        },
+        {
+          "path": "views/detail",
+          "style": {
+            "navigationBarTitleText": "图文详情"
+          }
+        }
+      ]
+    }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "低碳生活",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   }
