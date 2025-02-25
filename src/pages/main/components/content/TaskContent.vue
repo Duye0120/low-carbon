@@ -10,7 +10,7 @@
           <view class="task-desc">{{ task.description }}</view>
         </view>
         <view class="task-button" :class="{ completed: task.completed }" @click="completeTask(index)">
-          {{ task.completed ? '已完成' : '签到' }}
+          {{ task.completed ? '已完成' : renderType(task.type) }}
         </view>
       </view>
     </view>
@@ -29,27 +29,46 @@ const tasks = ref([
     title: '每日任务·打卡签到',
     description: '签到即可获得5点零碳积分',
     icon: '/static/task-checkin.png',
-    completed: true
+    completed: true,
+    // 签到
+    type: 'checkin'
   },
   {
     id: 2,
     title: '每日任务·知识问答',
     description: '参与问答可获得1-5点零碳积分',
     icon: '/static/task-quiz.png',
-    completed: false
+    completed: false,
+    // 答题
+    type: 'quiz'
   },
   {
     id: 3,
     title: '每日任务·浏览文章',
     description: '阅读文章可获得5点零碳积分',
     icon: '/static/task-article.png',
-    completed: false
+    completed: false,
+    // 浏览
+    type: 'browse'
   }
 ]);
 
 // 完成任务
 const completeTask = (index: number) => {
   tasks.value[index].completed = true;
+};
+
+const renderType = (type: string) => {
+  switch (type) {
+    case 'checkin':
+      return '签到';
+    case 'quiz':
+      return '答题';
+    case 'browse':
+      return '浏览';
+    default:
+      return '';
+  }
 };
 </script>
 
@@ -61,6 +80,9 @@ const completeTask = (index: number) => {
 .task-list {
   background-color: #fff;
   border-radius: 10rpx;
+  display: grid;
+  gap: 20rpx;
+  padding: 24rpx;
 }
 
 .task-item {
@@ -68,6 +90,8 @@ const completeTask = (index: number) => {
   align-items: center;
   padding: 20rpx;
   border-bottom: 1px solid #f0f0f0;
+  background-color: #EFF8F3;
+  height: 160rpx;
 }
 
 .task-icon {
@@ -89,9 +113,9 @@ const completeTask = (index: number) => {
 }
 
 .task-title {
-  font-size: 28rpx;
-  color: #333;
-  margin-bottom: 5rpx;
+  font-size: 30rpx;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 16rpx;
 }
 
 .task-desc {
@@ -100,16 +124,17 @@ const completeTask = (index: number) => {
 }
 
 .task-button {
-  background-color: #4CAF50;
+  background: linear-gradient(270deg, #39B675 0%, #4BC352 100%);
   color: white;
   font-size: 24rpx;
   padding: 10rpx 30rpx;
   border-radius: 30rpx;
+  transition: background 0.3s ease;
 }
 
 .task-button.completed {
   background-color: #e0e0e0;
-  color: #666;
+  color: white;
 }
 
 .bottom-spacing {

@@ -26,6 +26,7 @@
 .common-header {
   width: 100%;
   position: relative;
+  background-color: #BBF3E6;
 }
 
 .banner {
