@@ -5,15 +5,20 @@
       "style": {
         "navigationBarTitleText": "低碳生活"
       }
-    },
-    {
-      "path": "pages/main/index",
-      "style": {
-        "navigationBarTitleText": "低碳生活"
-      }
     }
   ],
   "subPackages": [
+    {
+      "root": "main",
+      "pages": [
+        {
+          "path": "index",
+          "style": {
+            "navigationBarTitleText": "低碳生活"
+          }
+        }
+      ]
+    },
     {
       "root": "user",
       "pages": [

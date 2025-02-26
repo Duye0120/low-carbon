@@ -18,13 +18,13 @@ const navigatorTo = (item: string) => {
   console.log(item)
   switch (item) {
     case '每日任务':
-      uni.navigateTo({ url: `/pages/main/index?tab=task` })
+      uni.navigateTo({ url: `/main/index?tab=task` })
       break
     case '场景切换':
-      uni.navigateTo({ url: `/pages/main/index?tab=scene` })
+      uni.navigateTo({ url: `/main/index?tab=scene` })
       break
     case '排行榜':
-      uni.navigateTo({ url: `/pages/main/index?tab=ranking` })
+      uni.navigateTo({ url: `/main/index?tab=ranking` })
       break
     case '个人中心':
       uni.navigateTo({ url: `/user/views/index` })

@@ -28,7 +28,7 @@ const tasks = ref([
     id: 1,
     title: '每日任务·打卡签到',
     description: '签到即可获得5点零碳积分',
-    icon: '/static/task-checkin.png',
+    icon: '../../static/taskList1.png',
     completed: true,
     // 签到
     type: 'checkin'
@@ -37,7 +37,7 @@ const tasks = ref([
     id: 2,
     title: '每日任务·知识问答',
     description: '参与问答可获得1-5点零碳积分',
-    icon: '/static/task-quiz.png',
+    icon: '../../static/taskList2.png',
     completed: false,
     // 答题
     type: 'quiz'
@@ -46,7 +46,7 @@ const tasks = ref([
     id: 3,
     title: '每日任务·浏览文章',
     description: '阅读文章可获得5点零碳积分',
-    icon: '/static/task-article.png',
+    icon: '../../static/taskList3.png',
     completed: false,
     // 浏览
     type: 'browse'
