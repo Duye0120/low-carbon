@@ -1,33 +1,13 @@
 <template>
   <view class="page-wrapper">
     <view class="page-header">
-      <view class="header-content">
-        <view class="content-left">
-          <!-- <u-avatar :size="64" :src="info.avatar"></u-avatar> -->
-          <image :src="info.avatar" mode="widthFix"></image>
-        </view>
-        <view class="content-center">
-          <view class="top">
-            {{ info.name }}
-          </view>
-          <view class="bottom">
-            {{ roleName }}
-          </view>
-        </view>
-        <view @tap="goToMessage" class="content-arrow">
-          <image
-            style="width: 44rpx"
-            mode="widthFix"
-            src="/static/user/message.png"
-            alt=""
-          />
-          <u-badge
-            style="top: -16rpx; left: 16rpx; position: absolute"
-            type="error"
-            max="99"
-            :value="messageAccount"
-          ></u-badge>
-        </view>
+      <image class="avatar" src="../static/message.png" mode="widthFix" />
+      <view class="userName">用户昵称12138</view>
+    </view>
+    <view class="page-middle">
+      <view class="middle-item" v-for="item in recordList" :key="item.label">
+        <view class="middle-item-value">{{ item.value }}</view>
+        <view class="middle-item-label">{{ item.label }}</view>
       </view>
     </view>
     <view class="operate-list">
@@ -40,12 +20,13 @@
         <view class="item-icon">
           <image :src="item.icon" mode="aspectFit"></image>
         </view>
-        <view class="item-content" :class="{ border: i != 0 }">
+        <view class="item-content border">
           <view class="item-content-title">
             {{ item.title }}
           </view>
           <view class="item-right">
-            <uni-icons type="arrowright" size="16" color="#C5C8CE"></uni-icons>
+            <view style="margin-right: 16rpx; color: #DADFE2" class="item-right-extra">{{ item.extra }}</view>
+            <van-icon name="arrow" size="16" color="#C5C8CE" />
           </view>
         </view>
       </view>
@@ -55,22 +36,39 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-
+let recordList = ref([
+  {
+    label: "打卡点位",
+    value: 5,
+  },
+  {
+    label: "电子勋章",
+    value: 3,
+  },
+  {
+    label: "低碳积分",
+    value: 300,
+  },
+]);
 let list = ref([
   {
-    icon: "../assets/mine.png",
+    icon: "../static/mine.png",
+    extra: "",
     title: "个人信息",
   },
   {
-    icon: "../assets/password.png",
+    icon: "../static/password.png",
+    extra: "",
     title: "积分记录",
   },
   {
-    icon: "../assets/message.png",
+    icon: "../static/message.png",
+    extra: "期待您的意见",
     title: "意见反馈",
   },
   {
-    icon: "../assets/account.png",
+    icon: "../static/account.png",
+    extra: "",
     title: "设置",
   },
 ]);
@@ -111,72 +109,68 @@ const goToMessage = () => {
 </script>
 
 <style scoped lang="scss">
-image {
-  display: block;
-}
-
-view {
-  box-sizing: border-box;
-}
-
 .page-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #f4f5f7;
-  overflow: hidden;
+  width: calc(100% - 64rpx);
+  height: calc(100% - 64rpx);
+  padding: 32rpx;
+  // display: flex;
+  // flex-direction: column;
+  background-color: #f1f8ff;
+  // overflow: hidden;
 
   .page-header {
-    position: relative;
-
-    image {
-      width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 32rpx;
+    .avatar {
+      margin-left: 16rpx;
+      margin-right: 24rpx;
+      width: 120rpx;
+      border-radius: 50%;
+      border: 1px solid #32c5ff;
     }
-
-    .header-content {
-      padding: 0 48rpx;
-      position: absolute;
-      bottom: 40rpx;
+    .userName {
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 400;
+      font-size: 32rpx;
+      color: rgba(0, 0, 0, 0.85);
+    }
+  }
+  .page-middle {
+    background-color: #ffffff;
+    border-radius: 4rpx;
+    padding: 32rpx 52rpx;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 36rpx;
+    .middle-item {
+      // 竖向flex 并且居中对齐
       display: flex;
+      flex-direction: column;
       align-items: center;
-      width: 100%;
-
-      .content-left image {
-        width: 104rpx;
-      }
-
-      .content-center {
-        color: #ffffff;
-        margin-left: 32rpx;
+      &-value {
+        font-family: PingFangSC, PingFang SC;
         font-weight: 400;
-
-        .top {
-          font-size: 16px;
-        }
-
-        .bottom {
-          font-size: 14px;
-          margin-top: 10rpx;
-        }
+        font-size: 16px;
+        color: #3ca758;
       }
-
-      .content-arrow {
-        position: absolute;
-        right: 36rpx;
-        top: -40rpx;
+      &-label {
+        font-family: PingFangSC, PingFang SC;
+        font-weight: 400;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.85);
       }
     }
   }
 
   .operate-list {
-    margin: 24rpx;
+    height: calc(100% - 320rpx);
     background-color: #ffffff;
     border-radius: 8rpx;
 
     .list-item {
       display: flex;
-      padding-left: 48rpx;
+      padding-left: 24rpx;
       align-items: center;
 
       .item-icon image {
@@ -185,15 +179,16 @@ view {
       }
 
       .border {
-        border-top: 1px solid #dcdee2;
+        border-bottom: 1px solid #dcdee2;
       }
 
       .item-content {
         flex: 1;
         margin-left: 20rpx;
+        margin-right: 8rpx;
         display: flex;
         align-items: center;
-        padding-right: 48rpx;
+        padding-right: 24rpx;
 
         .item-content-title {
           flex: 1;
@@ -205,28 +200,12 @@ view {
         }
 
         .item-right {
+          display: flex;
+          align-items: center;
           font-size: 14px;
           color: #c5c8ce;
         }
       }
-    }
-  }
-
-  .button-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column-reverse;
-    padding-bottom: 160rpx;
-
-    .button {
-      margin: 0 auto;
-      height: 72rpx;
-      line-height: 72rpx;
-      font-size: 32rpx;
-      border-radius: 36rpx;
-      color: #ffffff;
-      width: 74%;
-      background: #5476fd;
     }
   }
 }

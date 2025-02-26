@@ -9,17 +9,6 @@
   ],
   "subPackages": [
     {
-      "root": "main",
-      "pages": [
-        {
-          "path": "index",
-          "style": {
-            "navigationBarTitleText": "低碳生活"
-          }
-        }
-      ]
-    },
-    {
       "root": "user",
       "pages": [
         {
@@ -46,11 +35,25 @@
           }
         }
       ]
+    },
+    {
+      "root": "main",
+      "pages": [
+        {
+          "path": "index",
+          "style": {
+            "navigationBarTitleText": "资讯中心"
+          }
+        }
+      ]
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "低碳生活",
+		"usingComponents": {
+			"van-icon": "/wxcomponents/vant/icon/index"
+		},
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   }

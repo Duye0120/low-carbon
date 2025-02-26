@@ -10,4 +10,12 @@ onHide(() => {
   console.log("App Hide");
 });
 </script>
-<style></style>
+<style>
+uni-page-body {
+  height: 100%;
+}
+
+page {
+  height: 100%;
+}
+</style>
