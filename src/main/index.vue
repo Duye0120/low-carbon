@@ -5,7 +5,7 @@
       <CommonHeader />
     </view>
 
-    <view class="content">
+    <view class="content" :style="{ backgroundColor: primaryColor }">
       <!-- 固定的导航选项卡 -->
       <view class="fixed-tabs">
         <view
@@ -40,15 +40,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
 import CommonHeader from "./components/CommonHeader.vue";
 import SceneContent from "./components/content/SceneContent.vue";
 import TaskContent from "./components/content/TaskContent.vue";
 import RankingContent from "./components/content/RankingContent.vue";
+import { SecneType } from "./components/type.d";
 
 // 当前激活的选项卡
 const activeTab = ref("scene");
+const primaryColor = ref("#4da050");
 
 // 选项卡数据
 const tabs = [
@@ -94,6 +96,57 @@ const getCircleLeft = (activeTab: string): string => {
       return "83%";
     default:
       return "0";
+  }
+};
+
+// 场景变化处理函数
+const handleSceneChange = (sceneId: SecneType) => {
+  console.log("收到场景变化事件:", sceneId);
+  primaryColor.value = getPrimaryColorByScene(sceneId);
+};
+
+onMounted(() => {
+  // 在组件挂载时设置事件监听
+  uni.$on("sceneChange", handleSceneChange);
+});
+
+onUnmounted(() => {
+  // 在组件卸载时移除事件监听
+  uni.$off("sceneChange", handleSceneChange);
+});
+
+onLoad(() => {
+  console.log("CommonHeader 组件已加载");
+  // 初始化时从存储中获取场景ID
+  uni.getStorage({
+    key: "SceneContent",
+    success: function (res) {
+      if (res.data) {
+        console.log("从存储中获取到场景ID:", res.data);
+        primaryColor.value = getPrimaryColorByScene(res.data);
+      }
+    },
+    fail: function () {
+      console.log("未找到存储的场景ID，使用默认场景");
+      primaryColor.value = getPrimaryColorByScene("hydrogenVehicle");
+    },
+  });
+});
+
+const getPrimaryColorByScene = (sceneId: SecneType): string => {
+  switch (sceneId) {
+    case "hydrogenVehicle":
+      return "#EDEA7F";
+    case "gasElectricity":
+      return "#7CCFFB";
+    case "water":
+      return "#F7FDD6";
+    case "bike":
+      return "#4da050";
+    case "zeroCarbonHouse":
+      return "#87E2BE";
+    default:
+      return "#4da050";
   }
 };
 </script>
