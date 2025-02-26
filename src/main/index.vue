@@ -5,27 +5,30 @@
       <CommonHeader />
     </view>
 
-    <!-- 固定的导航选项卡 -->
-    <view class="fixed-tabs">
-      <view v-for="(tab, index) in tabs" :key="index" class="tab-item" :class="{ active: activeTab === tab.id }"
-        @click="switchTab(tab.id)">
-        <image class="tab-icon" :src="tab.icon" mode="aspectFit"></image>
-        <text class="tab-text">{{ tab.title }}</text>
+    <view class="content">
+      <!-- 固定的导航选项卡 -->
+      <view class="fixed-tabs">
+        <view v-for="(tab, index) in tabs" :key="index" class="tab-item" :class="{ active: activeTab === tab.id }"
+          @click="switchTab(tab.id)">
+          <image class="tab-icon" :src="tab.icon" mode="aspectFit"></image>
+          <text class="tab-text">{{ tab.title }}</text>
+        </view>
+      </view>
+
+      <!-- 可滚动的内容区域 -->
+      <view class="scrollable-content">
+        <!-- 场景切换 -->
+        <SceneContent v-if="activeTab === 'scene'" />
+
+        <!-- 任务列表 -->
+        <TaskContent v-if="activeTab === 'task'" />
+
+        <!-- 排行榜 -->
+        <RankingContent v-if="activeTab === 'ranking'" />
       </view>
     </view>
-
-    <!-- 可滚动的内容区域 -->
-    <view class="scrollable-content">
-      <!-- 场景切换 -->
-      <SceneContent v-if="activeTab === 'scene'" />
-
-      <!-- 任务列表 -->
-      <TaskContent v-if="activeTab === 'task'" />
-
-      <!-- 排行榜 -->
-      <RankingContent v-if="activeTab === 'ranking'" />
-    </view>
   </view>
+
 </template>
 
 <script setup lang="ts">
@@ -85,19 +88,27 @@ onLoad((query) => {
   /* 防止整体滚动 */
 }
 
+.content {
+  flex: 1;
+  /* 占用剩余空间 */
+  display: flex;
+  flex-direction: column;
+  background-color: #4DA050;
+}
+
 .fixed-header {
   flex-shrink: 0;
   /* 防止头部区域被压缩 */
   z-index: 10;
+  height: 432rpx;
+  overflow: hidden;
 }
 
 .fixed-tabs {
   display: flex;
   justify-content: space-between;
   padding: 20rpx;
-  background-color: #fff;
   border-radius: 10rpx;
-  margin: 0 20rpx 20rpx 20rpx;
   z-index: 10;
   flex-shrink: 0;
   /* 防止导航区域被压缩 */
@@ -107,8 +118,11 @@ onLoad((query) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
   padding: 10rpx 0;
+  width: 218rpx;
+  height: 208rpx;
+  background: #FFFFFF;
+  border-radius: 8rpx;
 }
 
 .tab-icon {

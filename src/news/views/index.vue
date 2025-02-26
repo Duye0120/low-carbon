@@ -1,13 +1,110 @@
 <template>
-    <view class="page-content">
-        news index
-    </view>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref } from 'vue'
-  </script>
-  
-  <style>
-  </style>
-  
+  <view class="page-wrapper">
+    <scroll-view
+      :show-scrollbar="false"
+      scroll-y="true"
+      class="page-wrapper-content"
+    >
+      <view class="new-item" v-for="item in newsList" :key="item.id">
+        <view class="new-item-imgs">
+          <swiper
+            class="swiper"
+            circular
+            :indicator-dots="true"
+            :autoplay="true"
+            indicator-active-color="#fff"
+          >
+            <swiper-item v-for="img in item.imgs" :key="img">
+              <image :src="img" mode="aspectFill"></image>
+            </swiper-item>
+          </swiper>
+        </view>
+        <view class="new-item-content">{{ item.content }}</view>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+let newsList = ref([
+  {
+    imgs: [
+      "/static/logo.png",
+      "/static/logo.png",
+      "/static/logo.png",
+      "/static/logo.png",
+      "/static/logo.png",
+    ],
+    content:
+      "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
+    id: "",
+  },
+  {
+    imgs: [],
+    content:
+      "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
+    id: "",
+  },
+  {
+    imgs: [],
+    content:
+      "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
+    id: "",
+  },
+  {
+    imgs: [],
+    content:
+      "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
+    id: "",
+  },
+  {
+    imgs: [],
+    content:
+      "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
+    id: "",
+  },
+  {
+    imgs: [],
+    content:
+      "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
+    id: "",
+  },
+]);
+</script>
+
+<style scoped lang="scss">
+.page-wrapper {
+  padding: 40rpx;
+  height: calc(100% - 80rpx);
+  width: calc(100% - 80rpx);
+  background: #f1f8ff;
+  &-content {
+    height: 100%;
+    width: 100%;
+    .new-item {
+      background: #fff;
+      margin-bottom: 40rpx;
+      border-radius: 8rpx;
+      &-imgs {
+        width: 100%;
+        height: 400rpx;
+        box-shadow: 0px 2rpx 4rpx 0px rgba(0,0,0,0.22);
+        border-radius: 32rpx 32rpx 0px 0px;
+        .swiper {
+          width: 100%;
+          height: 100%;
+          image {
+            width: 100%;
+          }
+        }
+      }
+      &-content {
+        border-radius: 0px 0px 8rpx 8rpx;
+        box-shadow: 0px 2rpx 4rpx 0px rgba(0,0,0,0.22);
+        background: #FAFAFA;
+      }
+    }
+  }
+}
+</style>
