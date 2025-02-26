@@ -17,7 +17,7 @@
 
     <!-- Banner图像 -->
     <view class="banner">
-      <image class="banner-image" :src="bannerSrc" mode="widthFix"></image>
+      <image class="banner-image" :src="bannerSrc" mode="aspectFill"></image>
     </view>
   </view>
 </template>
@@ -85,19 +85,19 @@ onLoad(() => {
 <style scoped>
 .common-header {
   width: 100%;
+  height: 100%;
   position: relative;
   background-color: #bbf3e6;
 }
 
 .banner {
   width: 100%;
+  height: 100%;
 }
 
 .banner-image {
   width: 100%;
-  display: block;
-  /* 等比例缩放 */
-  object-fit: cover;
+  height: 100%;
 }
 
 .user-info {
@@ -107,17 +107,21 @@ onLoad(() => {
   z-index: 10;
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
+  justify-content: center;
+  /* background-color: rgba(255, 255, 255, 0.8); */
   border-radius: 30rpx;
   padding: 10rpx 20rpx;
 }
 
 .avatar-wrapper {
-  width: 60rpx;
-  height: 60rpx;
+  width: 102rpx;
+  height: 102rpx;
   border-radius: 50%;
   overflow: hidden;
   margin-right: 10rpx;
+  background-color: #fff;
+  position: absolute;
+  left: 0;
 }
 
 .avatar {
@@ -128,15 +132,26 @@ onLoad(() => {
 .user-details {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  height: 90rpx;
+  width: fit-content;
+  padding: 0 35rpx 0 100rpx;
+  border-radius: 45rpx;
 }
 
 .username {
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: #333;
+  margin-bottom: 4rpx;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
 }
 
 .points {
-  font-size: 22rpx;
-  color: #4caf50;
+  font-size: 24rpx;
+  color: #38B868;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
 }
 </style>
