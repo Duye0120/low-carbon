@@ -1,5 +1,6 @@
 <template>
   <view class="task-container">
+    
     <view class="task-list">
       <view v-for="(task, index) in tasks" :key="index" class="task-item">
         <view class="task-icon">
@@ -75,7 +76,9 @@ const renderType = (type: string) => {
 <style scoped>
 .task-container {
   padding: 20rpx 0;
+  position: relative;
 }
+
 
 .task-list {
   background-color: #fff;
@@ -95,8 +98,8 @@ const renderType = (type: string) => {
 }
 
 .task-icon {
-  width: 80rpx;
-  height: 80rpx;
+  width: 152rpx;
+  height: 128rpx;
   margin-right: 20rpx;
   display: flex;
   align-items: center;
@@ -104,8 +107,8 @@ const renderType = (type: string) => {
 }
 
 .task-icon image {
-  width: 60rpx;
-  height: 60rpx;
+  width: 152rpx;
+  height: 128rpx;
 }
 
 .task-info {
