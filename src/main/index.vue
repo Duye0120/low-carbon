@@ -8,11 +8,20 @@
     <view class="content">
       <!-- 固定的导航选项卡 -->
       <view class="fixed-tabs">
-        <view v-for="(tab, index) in tabs" :key="index" class="tab-item" :class="{ active: activeTab === tab.id }"
-          @click="switchTab(tab.id)">
+        <view
+          v-for="(tab, index) in tabs"
+          :key="index"
+          class="tab-item"
+          :class="{ active: activeTab === tab.id }"
+          @click="switchTab(tab.id)"
+        >
           <image class="tab-icon" :src="tab.icon" mode="aspectFit"></image>
           <text class="tab-text">{{ tab.title }}</text>
         </view>
+        <view
+          class="top-circle"
+          :style="{ left: getCircleLeft(activeTab) }"
+        ></view>
       </view>
 
       <!-- 可滚动的内容区域 -->
@@ -28,37 +37,36 @@
       </view>
     </view>
   </view>
-
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
-import CommonHeader from './components/CommonHeader.vue';
-import SceneContent from './components/content/SceneContent.vue';
-import TaskContent from './components/content/TaskContent.vue';
-import RankingContent from './components/content/RankingContent.vue';
+import { ref } from "vue";
+import { onLoad } from "@dcloudio/uni-app";
+import CommonHeader from "./components/CommonHeader.vue";
+import SceneContent from "./components/content/SceneContent.vue";
+import TaskContent from "./components/content/TaskContent.vue";
+import RankingContent from "./components/content/RankingContent.vue";
 
 // 当前激活的选项卡
-const activeTab = ref('scene');
+const activeTab = ref("scene");
 
 // 选项卡数据
 const tabs = [
   {
-    id: 'scene',
-    title: '场景切换',
-    icon: '/static/icon-scene.png'
+    id: "scene",
+    title: "场景切换",
+    icon: "./static/map.png",
   },
   {
-    id: 'task',
-    title: '任务列表',
-    icon: '/static/icon-task.png'
+    id: "task",
+    title: "任务列表",
+    icon: "./static/taskList.png",
   },
   {
-    id: 'ranking',
-    title: '排行榜',
-    icon: '/static/icon-ranking.png'
-  }
+    id: "ranking",
+    title: "排行榜",
+    icon: "./static/ranking.png",
+  },
 ];
 
 // 切换选项卡
@@ -68,13 +76,26 @@ const switchTab = (tabId: string) => {
 
 // 页面加载时从URL参数中获取选中的选项卡
 onLoad((query) => {
-  console.log('Page loaded with query:', query);
+  console.log("Page loaded with query:", query);
   if (query && query.tab) {
     activeTab.value = query.tab;
   } else {
-    console.log('No tab option found in the query, using default tab.');
+    console.log("No tab option found in the query, using default tab.");
   }
 });
+
+const getCircleLeft = (activeTab: string): string => {
+  switch (activeTab) {
+    case "scene":
+      return "17%";
+    case "task":
+      return "50%";
+    case "ranking":
+      return "83%";
+    default:
+      return "0";
+  }
+};
 </script>
 
 <style scoped>
@@ -89,11 +110,12 @@ onLoad((query) => {
 }
 
 .content {
-  flex: 1;
+  height: calc(100% - 432rpx);
   /* 占用剩余空间 */
   display: flex;
   flex-direction: column;
-  background-color: #4DA050;
+  background-color: #4da050;
+  margin-bottom: 40rpx;
 }
 
 .fixed-header {
@@ -111,6 +133,7 @@ onLoad((query) => {
   border-radius: 10rpx;
   z-index: 10;
   flex-shrink: 0;
+  position: relative;
   /* 防止导航区域被压缩 */
 }
 
@@ -118,16 +141,16 @@ onLoad((query) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10rpx 0;
+  justify-content: center;
   width: 218rpx;
   height: 208rpx;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 8rpx;
 }
 
 .tab-icon {
-  width: 48rpx;
-  height: 48rpx;
+  width: 82rpx;
+  height: 94rpx;
   margin-bottom: 10rpx;
 }
 
@@ -137,7 +160,7 @@ onLoad((query) => {
 }
 
 .active .tab-text {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .scrollable-content {
@@ -145,9 +168,28 @@ onLoad((query) => {
   /* 占用剩余空间 */
   overflow-y: auto;
   /* 允许垂直滚动 */
-  padding: 0 20rpx;
+  margin: 20rpx;
   box-sizing: border-box;
+  background-color: #fff;
   -webkit-overflow-scrolling: touch;
   /* 在iOS上提供平滑滚动 */
+  position: relative;
+  border-radius: 8rpx;
+}
+
+/* 头部三角形 */
+.top-circle {
+  width: 0;
+  height: 0;
+  border-bottom: 20rpx solid #fff;
+  border-left: 20rpx solid transparent;
+  border-right: 20rpx solid transparent;
+  position: absolute;
+  bottom: -20rpx;
+  /* left: 50%; */
+  transform: translateX(-50%);
+  /* 三角形位置移动的时候添加动画 */
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 </style>

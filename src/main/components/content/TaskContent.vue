@@ -1,5 +1,6 @@
 <template>
   <view class="task-container">
+    
     <view class="task-list">
       <view v-for="(task, index) in tasks" :key="index" class="task-item">
         <view class="task-icon">
@@ -28,7 +29,7 @@ const tasks = ref([
     id: 1,
     title: '每日任务·打卡签到',
     description: '签到即可获得5点零碳积分',
-    icon: '/static/task-checkin.png',
+    icon: '../../static/taskList1.png',
     completed: true,
     // 签到
     type: 'checkin'
@@ -37,7 +38,7 @@ const tasks = ref([
     id: 2,
     title: '每日任务·知识问答',
     description: '参与问答可获得1-5点零碳积分',
-    icon: '/static/task-quiz.png',
+    icon: '../../static/taskList2.png',
     completed: false,
     // 答题
     type: 'quiz'
@@ -46,7 +47,7 @@ const tasks = ref([
     id: 3,
     title: '每日任务·浏览文章',
     description: '阅读文章可获得5点零碳积分',
-    icon: '/static/task-article.png',
+    icon: '../../static/taskList3.png',
     completed: false,
     // 浏览
     type: 'browse'
@@ -75,7 +76,9 @@ const renderType = (type: string) => {
 <style scoped>
 .task-container {
   padding: 20rpx 0;
+  position: relative;
 }
+
 
 .task-list {
   background-color: #fff;
@@ -95,8 +98,8 @@ const renderType = (type: string) => {
 }
 
 .task-icon {
-  width: 80rpx;
-  height: 80rpx;
+  width: 152rpx;
+  height: 128rpx;
   margin-right: 20rpx;
   display: flex;
   align-items: center;
@@ -104,8 +107,8 @@ const renderType = (type: string) => {
 }
 
 .task-icon image {
-  width: 60rpx;
-  height: 60rpx;
+  width: 152rpx;
+  height: 128rpx;
 }
 
 .task-info {
