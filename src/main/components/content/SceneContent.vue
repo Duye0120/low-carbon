@@ -22,7 +22,7 @@ const scenes = ref([
   {
     id: 1,
     title: '乘坐氢能交通工具',
-    image: '/static/scene-1.png',
+    image: '../../static/changeScene/hydrogenVehicle.png',
     active: true
   },
   {
@@ -34,19 +34,19 @@ const scenes = ref([
   {
     id: 3,
     title: '喝海露纯净水',
-    image: '/static/scene-3.png',
+    image: '../../static/changeScene/water.png',
     active: false
   },
   {
     id: 4,
     title: '体验零碳单车',
-    image: '/static/scene-4.png',
+    image: '../../static/changeScene/bike.png',
     active: false
   },
   {
     id: 5,
     title: '零碳小屋',
-    image: '/static/scene-5.png',
+    image: '../../static/changeScene/zeroCarbonHouse.png',
     active: false
   }
 ]);
@@ -61,7 +61,7 @@ const switchScene = (index: number) => {
 
 <style scoped>
 .scene-container {
-  padding: 20rpx 0;
+  padding: 24rpx;
 }
 
 .scene-grid {
@@ -71,13 +71,13 @@ const switchScene = (index: number) => {
 }
 
 .scene-item {
-  background-color: #fff;
+  background-color: #EFF8F3;
   border-radius: 10rpx;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 20rpx;
+  padding: 24rpx; 
 }
 
 .scene-image {
@@ -96,8 +96,12 @@ const switchScene = (index: number) => {
   background-color: #e0e0e0;
   color: #666;
   font-size: 24rpx;
-  padding: 10rpx 30rpx;
-  border-radius: 30rpx;
+  border-radius: 28rpx;
+  width: 198rpx;
+  height: 56rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .scene-button.active {
