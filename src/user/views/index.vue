@@ -1,35 +1,9 @@
 <template>
   <view class="page-wrapper">
     <view class="page-header">
-      <view class="header-content">
-        <view class="content-left">
-          <!-- <u-avatar :size="64" :src="info.avatar"></u-avatar> -->
-          <image :src="info.avatar" mode="widthFix"></image>
-        </view>
-        <view class="content-center">
-          <view class="top">
-            {{ info.name }}
-          </view>
-          <view class="bottom">
-            {{ roleName }}
-          </view>
-        </view>
-        <view @tap="goToMessage" class="content-arrow">
-          <image
-            style="width: 44rpx"
-            mode="widthFix"
-            src="/static/user/message.png"
-            alt=""
-          />
-          <u-badge
-            style="top: -16rpx; left: 16rpx; position: absolute"
-            type="error"
-            max="99"
-            :value="messageAccount"
-          ></u-badge>
-        </view>
-      </view>
+      <image class="avatar" src="../static/message.png" mode="widthFix"/>
     </view>
+    <view class="page-middle"> </view>
     <view class="operate-list">
       <view
         class="list-item"
@@ -58,19 +32,19 @@ import { ref } from "vue";
 
 let list = ref([
   {
-    icon: "../assets/mine.png",
+    icon: "../static/mine.png",
     title: "个人信息",
   },
   {
-    icon: "../assets/password.png",
+    icon: "../static/password.png",
     title: "积分记录",
   },
   {
-    icon: "../assets/message.png",
+    icon: "../static/message.png",
     title: "意见反馈",
   },
   {
-    icon: "../assets/account.png",
+    icon: "../static/account.png",
     title: "设置",
   },
 ]);
@@ -111,66 +85,24 @@ const goToMessage = () => {
 </script>
 
 <style scoped lang="scss">
-image {
-  display: block;
-}
-
-view {
-  box-sizing: border-box;
-}
-
 .page-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #f4f5f7;
-  overflow: hidden;
+  width: calc(100% - 64rpx);
+  height: calc(100% - 64rpx);
+  padding: 32rpx;
+  // display: flex;
+  // flex-direction: column;
+  background-color: #f1f8ff;
+  // overflow: hidden;
 
   .page-header {
-    position: relative;
-
-    image {
-      width: 100%;
-    }
-
-    .header-content {
-      padding: 0 48rpx;
-      position: absolute;
-      bottom: 40rpx;
-      display: flex;
-      align-items: center;
-      width: 100%;
-
-      .content-left image {
-        width: 104rpx;
-      }
-
-      .content-center {
-        color: #ffffff;
-        margin-left: 32rpx;
-        font-weight: 400;
-
-        .top {
-          font-size: 16px;
-        }
-
-        .bottom {
-          font-size: 14px;
-          margin-top: 10rpx;
-        }
-      }
-
-      .content-arrow {
-        position: absolute;
-        right: 36rpx;
-        top: -40rpx;
-      }
+    .avatar {
+      width: 120rpx;
+      border-radius: 50%;
+      border: 1px solid #32C5FF;
     }
   }
 
   .operate-list {
-    margin: 24rpx;
     background-color: #ffffff;
     border-radius: 8rpx;
 
@@ -209,24 +141,6 @@ view {
           color: #c5c8ce;
         }
       }
-    }
-  }
-
-  .button-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column-reverse;
-    padding-bottom: 160rpx;
-
-    .button {
-      margin: 0 auto;
-      height: 72rpx;
-      line-height: 72rpx;
-      font-size: 32rpx;
-      border-radius: 36rpx;
-      color: #ffffff;
-      width: 74%;
-      background: #5476fd;
     }
   }
 }

@@ -31,10 +31,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
-import CommonHeader from '@/components/CommonHeader.vue';
-import SceneContent from '@/components/content/SceneContent.vue';
-import TaskContent from '@/components/content/TaskContent.vue';
-import RankingContent from '@/components/content/RankingContent.vue';
+import CommonHeader from './components/CommonHeader.vue';
+import SceneContent from './components/content/SceneContent.vue';
+import TaskContent from './components/content/TaskContent.vue';
+import RankingContent from './components/content/RankingContent.vue';
 
 // 当前激活的选项卡
 const activeTab = ref('scene');
