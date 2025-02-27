@@ -9,13 +9,63 @@
       <view class="button" @click="navigatorTo('资讯中心')">资讯中心</view>
     </view>
 	<!-- <van-overlay :show="true"/> -->
+    
+    <!-- 签到弹窗组件 -->
+    <SignInOverlay 
+      v-model:show="showSignInOverlay" 
+      @close="handleCloseSignIn"
+      @sign-in="handleSignIn"
+    />
   </view>
 </template>
 
 <script setup lang="ts">
 import { onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import SignInOverlay from './components/SignInOverlay.vue'
+
 const title = ref('Hello')
+// 控制签到弹窗显示
+const showSignInOverlay = ref(false)
+
+// 页面加载时显示签到弹窗
+onMounted(() => {
+  // 检查是否已经签到，如果没有则显示弹窗
+  checkSignInStatus()
+})
+
+// onUnmounted(() => {
+//   uni.removeStorageSync('lastSignInDate')
+// })
+  
+
+// 检查签到状态
+const checkSignInStatus = () => {
+  // 这里可以添加检查本地存储或API调用来判断用户今天是否已经签到
+  // 示例：简单使用本地存储判断
+  const today = new Date().toDateString()
+  const lastSignInDate = uni.getStorageSync('lastSignInDate')
+  
+  if (lastSignInDate !== today) {
+    // 今天还没有签到，显示弹窗
+    showSignInOverlay.value = true
+  }
+}
+
+// 处理签到
+const handleSignIn = (day: number) => {
+  console.log('用户已签到', day, '天')
+  // 记录签到日期
+  const today = new Date().toDateString()
+  uni.setStorageSync('lastSignInDate', today)
+  // 这里可以添加其他签到后的逻辑，如积分增加等
+}
+
+// 处理关闭签到弹窗
+const handleCloseSignIn = () => {
+  showSignInOverlay.value = false
+}
+
 const navigatorTo = (item: string) => {
   console.log(item)
   switch (item) {

@@ -6,14 +6,17 @@
  * bike: 体验零碳单车
  * zeroCarbonHouse: 零碳小屋
  */
-export type SecneType = 'hydrogenVehicle' | 'gasElectricity' | 'water' | 'bike' | 'zeroCarbonHouse'
-
-
+export type SecneType =
+  | "hydrogenVehicle"
+  | "gasElectricity"
+  | "water"
+  | "bike"
+  | "zeroCarbonHouse";
 
 export interface IPropsType {
-    userName: string;
-    points: number;
-    rank: number;
-    avatar: string;
-    key: string;
-  }
+  userName: string;
+  points: number;
+  rank: number;
+  avatar: string;
+  key: string;
+}
