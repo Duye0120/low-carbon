@@ -16,6 +16,30 @@
           "style": {
             "navigationBarTitleText": "个人中心"
           }
+        },
+        {
+          "path": "views/my-info",
+          "style": {
+            "navigationBarTitleText": "个人信息"
+          }
+        },
+        {
+          "path": "views/integral-record",
+          "style": {
+            "navigationBarTitleText": "积分记录"
+          }
+        },
+        {
+          "path": "views/feedback",
+          "style": {
+            "navigationBarTitleText": "意见反馈"
+          }
+        },
+        {
+          "path": "views/setting",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
         }
       ]
     },

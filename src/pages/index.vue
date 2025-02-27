@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 const title = ref('Hello')
 const navigatorTo = (item: string) => {
@@ -41,6 +42,23 @@ const navigatorTo = (item: string) => {
       break
   }
 }
+onShow(() => {
+  uni.login({
+  provider: 'weixin',
+  success: function (loginRes) {
+    console.log(loginRes);
+    // 获取用户信息
+    uni.getUserInfo({
+      provider: 'weixin',
+      success: function (infoRes) {
+        console.log(infoRes);
+        console.log('用户昵称为：' + infoRes.userInfo.nickName);
+        uni.setStorageSync('info', infoRes.userInfo)
+      }
+    });
+  }
+});
+})
 </script>
 
 <style>

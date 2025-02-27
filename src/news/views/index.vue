@@ -5,22 +5,8 @@
       scroll-y="true"
       class="page-wrapper-content"
     >
-      <view class="new-item" v-for="item in newsList" :key="item.id">
-        <swiper
-          class="new-item-imgs"
-          circular
-          :indicator-dots="true"
-          :autoplay="true"
-          indicator-active-color="#fff"
-        >
-          <swiper-item
-            class="new-item-imgs-item"
-            v-for="img in item.imgs"
-            :key="img"
-          >
-            <image :src="img" mode="aspectFill"></image>
-          </swiper-item>
-        </swiper>
+      <view @click="toDetail(item)" class="new-item" v-for="item in newsList" :key="item.id">
+        <image class="new-item-imgs" :src="item.imgs" mode="aspectFill"></image>
         <view class="new-item-content">{{ item.content }}</view>
       </view>
     </scroll-view>
@@ -31,48 +17,47 @@
 import { ref } from "vue";
 let newsList = ref([
   {
-    imgs: [
-      "/static/logo.png",
-      "/static/logo.png",
-      "/static/logo.png",
-      "/static/logo.png",
-      "/static/logo.png",
-    ],
+    imgs: "/static/logo.png",
     content:
       "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
     id: "",
   },
   {
-    imgs: [],
+    imgs: "/static/logo.png",
     content:
       "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
     id: "",
   },
   {
-    imgs: [],
+    imgs: "/static/logo.png",
     content:
       "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
     id: "",
   },
   {
-    imgs: [],
+    imgs: "/static/logo.png",
     content:
       "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
     id: "",
   },
   {
-    imgs: [],
+    imgs: "/static/logo.png",
     content:
       "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
     id: "",
   },
   {
-    imgs: [],
+    imgs: "/static/logo.png",
     content:
       "工信部：到2027年发布并实施100项以工信部：到2027年发布并实施100项以",
     id: "",
   },
 ]);
+const toDetail = (item) => {
+  uni.navigateTo({
+    url: `/news/views/detail?id=${item.id}`,
+  });
+}
 </script>
 
 <style scoped lang="scss">
@@ -92,14 +77,6 @@ let newsList = ref([
         width: 100%;
         height: 300rpx;
         border-radius: 32rpx 32rpx 0px 0px;
-        &-item {
-          width: 100%;
-          height: 100%;
-          border-radius: 32rpx 32rpx 0px 0px;
-          > image {
-            width: 100%;
-          }
-        }
       }
       &-content {
         border-radius: 0px 0px 8rpx 8rpx;
