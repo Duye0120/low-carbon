@@ -53,7 +53,7 @@ let newsList = ref([
     id: "",
   },
 ]);
-const toDetail = (item) => {
+const toDetail = (item: any) => {
   uni.navigateTo({
     url: `/news/views/detail?id=${item.id}`,
   });
