@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="334px" height="164px" viewBox="0 0 334 164" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>编组 7</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M211.2,0 C213.298682,-3.85521638e-16 215,1.70131795 215,3.8 L215,11 L322.2,11 C324.298682,11 326,12.701318 326,14.8 L326,152.2 C326,154.298682 324.298682,156 322.2,156 L3.8,156 C1.70131795,156 -1.61742863e-14,154.298682 0,152.2 L0,14.8 C-7.01103635e-16,12.701318 1.70131795,11 3.8,11 L112,11 L112,3.8 C112,1.70131795 113.701318,4.38232453e-15 115.8,0 L211.2,0 Z" id="path-1"></path>
+        <filter x="-2.0%" y="-3.5%" width="104.0%" height="108.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="UI页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="3-排行榜" transform="translate(-20.000000, -429.000000)">
+            <g id="编组-22" transform="translate(24.000000, 432.000000)">
+                <g id="编组-7">
+                    <g id="形状结合">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    </g>
+                    <polygon id="路径-6" fill="#C8C8C8" points="215 11 215 109.8 222.512777 11"></polygon>
+                    <polygon id="路径-6备份" fill="#C8C8C8" transform="translate(108.243611, 60.400000) scale(-1, 1) translate(-108.243611, -60.400000) " points="104.487223 11 104.487223 109.8 112 11"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

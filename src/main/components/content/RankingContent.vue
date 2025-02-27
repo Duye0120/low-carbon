@@ -2,14 +2,15 @@
   <view class="ranking-container">
     <!-- 前三名用户 -->
     <view class="top-users">
-      <view v-for="(user, index) in top3Users" :key="index" class="top-user-card" :class="`rank-${index + 1}`">
-        <view class="rank-number">{{ index + 1 }}</view>
-        <view class="user-avatar">
-          <image src="/static/avatar.png" mode="aspectFill"></image>
-        </view>
-        <view class="user-name">用户名称</view>
-        <view class="user-points">{{ user.points }}</view>
-      </view>
+      <RankingTop3
+        class="top-user-card"
+        v-for="(user, index) in top3Users"
+        :key="`$rank-item-${index}`"
+        :rank="user?.rank ?? 0"
+        :avatar="user?.avatar ?? ''"
+        :userName="user?.userName ?? ''"
+        :points="user?.points ?? 0"
+      />
     </view>
 
     <!-- 用户排名列表 -->
@@ -31,46 +32,56 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-
+import { ref } from "vue";
+import RankingTop3 from "../RankingTop3.vue";
+import { IPropsType } from "../type.d";
 // 前三名用户数据
-const top3Users = ref([
-  { id: 1, name: '用户名称', points: 400 },
-  { id: 2, name: '用户名称', points: 400 },
-  { id: 3, name: '用户名称', points: 400 },
+const top3Users = ref<Array<Partial<IPropsType>>>([
+  { key: "2", userName: "用户名称2", points: 400, avatar: "", rank: 2 },
+  { key: "1", userName: "用户名称1", points: 400, avatar: "", rank: 1 },
+  { key: "3", userName: "用户名称3", points: 400, avatar: "", rank: 3 },
 ]);
 
 // 其他用户数据
 const otherUsers = ref([
-  { id: 4, name: '用户名称', points: 400 },
-  { id: 5, name: '用户名称', points: 400 },
-  { id: 6, name: '用户名称', points: 400 },
-  { id: 7, name: '用户名称', points: 400 },
-  { id: 8, name: '用户名称', points: 400 },
-  { id: 9, name: '用户名称', points: 400 },
+  { key: "4", userName: "用户名称", points: 400 },
+  { key: "5", userName: "用户名称", points: 400 },
+  { key: "6", userName: "用户名称", points: 400 },
+  { key: "7", userName: "用户名称", points: 400 },
+  { key: "8", userName: "用户名称", points: 400 },
+  { key: "9", userName: "用户名称", points: 400 },
 ]);
 </script>
 
 <style scoped>
 .ranking-container {
-  padding: 20rpx 0;
+  padding: 24rpx;
 }
 
 .top-users {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 30rpx;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* gap: 10rpx; */
+  /* margin-bottom: 30rpx; */
+  background: url("../../static/ranking/top3-bg-img.svg") no-repeat;
+  background-size: cover;
+  background-color: transparent;
+  /* box-shadow: 0 2rpx 4rpx 0 rgba(0, 0, 0, 0.22); */
+  border-radius: 8rpx;
+  overflow: hidden;
+  height: 320rpx;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 8rpx 0;
 }
 
 .top-user-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fff;
   border-radius: 10rpx;
-  padding: 20rpx;
-  position: relative;
-  width: 180rpx;
+  box-sizing: border-box;
+  height: 100%;
 }
 
 .rank-number {
@@ -89,15 +100,15 @@ const otherUsers = ref([
 }
 
 .rank-1 .rank-number {
-  background-color: #FFD700;
+  background-color: #ffd700;
 }
 
 .rank-2 .rank-number {
-  background-color: #C0C0C0;
+  background-color: #c0c0c0;
 }
 
 .rank-3 .rank-number {
-  background-color: #CD7F32;
+  background-color: #cd7f32;
 }
 
 .user-avatar {
@@ -121,7 +132,7 @@ const otherUsers = ref([
 
 .user-points {
   font-size: 22rpx;
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .user-rank-list {
