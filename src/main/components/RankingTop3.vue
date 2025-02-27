@@ -90,15 +90,20 @@ const rankBg = computed(() => {
       text-align: center;
 
       .user-name {
-        font-size: 14px;
+        font-size: 27rpx;
         color: #333;
-        margin-bottom: 4px;
+        font-family: PingFangSC, PingFang SC;
+        font-weight: 400;
+        color: rgba(0,0,0,0.85);
       }
 
       .user-points {
         font-size: 16px;
-        color: #4caf50; /* 绿色积分 */
+        color: #059944;
         font-weight: bold;
+        font-family: PingFangSC, PingFang SC;
+        font-weight: 400;
+        font-size: 27rpx;
       }
     }
   }

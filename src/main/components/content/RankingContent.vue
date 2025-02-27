@@ -14,20 +14,25 @@
     </view>
 
     <!-- 用户排名列表 -->
-    <view class="user-rank-list">
-      <view v-for="(user, index) in otherUsers" :key="index" class="rank-item">
-        <view class="rank-number">{{ index + 4 }}</view>
-        <view class="user-avatar">
-          <image src="/static/avatar.png" mode="aspectFill"></image>
+    <view class="user-rank-list-wrapper">
+      <view class="user-rank-list-header"></view>
+      <view class="user-rank-list">
+        <view
+          v-for="(user, index) in otherUsers"
+          :key="index"
+          class="rank-item"
+        >
+          <view class="rank-number">{{ index + 4 }}</view>
+          <view class="user-avatar">
+            <image src="/static/avatar.png" mode="aspectFill"></image>
+          </view>
+          <view class="user-info">
+            <view class="user-name">用户名称</view>
+          </view>
+          <view class="user-points">{{ user.points }}零碳积分</view>
         </view>
-        <view class="user-info">
-          <view class="user-name">用户名称</view>
-        </view>
-        <view class="user-points">{{ user.points }}零碳积分</view>
       </view>
     </view>
-    <!-- 添加底部间距，防止内容被遮挡 -->
-    <view class="bottom-spacing"></view>
   </view>
 </template>
 
@@ -53,7 +58,7 @@ const otherUsers = ref([
 ]);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .ranking-container {
   padding: 24rpx;
 }
@@ -73,6 +78,7 @@ const otherUsers = ref([
   width: 100%;
   box-sizing: border-box;
   padding: 24rpx 8rpx 0;
+  margin-bottom: 24rpx;
 }
 
 .top-user-card {
@@ -84,32 +90,18 @@ const otherUsers = ref([
   height: 100%;
 }
 
-.rank-number {
+/* .rank-number {
   position: absolute;
   top: -10rpx;
   left: -10rpx;
   width: 40rpx;
   height: 40rpx;
-  background-color: #ff5722;
   color: white;
-  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 24rpx;
-}
-
-.rank-1 .rank-number {
-  background-color: #ffd700;
-}
-
-.rank-2 .rank-number {
-  background-color: #c0c0c0;
-}
-
-.rank-3 .rank-number {
-  background-color: #cd7f32;
-}
+} */
 
 .user-avatar {
   width: 80rpx;
@@ -124,52 +116,70 @@ const otherUsers = ref([
   height: 100%;
 }
 
-.user-name {
-  font-size: 24rpx;
-  color: #333;
-  margin-bottom: 5rpx;
-}
-
-.user-points {
-  font-size: 22rpx;
-  color: #4caf50;
-}
-
-.user-rank-list {
-  background-color: #fff;
-  border-radius: 10rpx;
-}
-
 .rank-item {
   display: flex;
   align-items: center;
-  padding: 20rpx;
+  padding: 30rpx;
   border-bottom: 1px solid #f0f0f0;
+  .rank-number {
+    position: static;
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 20rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 28rpx;
+    color: rgba(0, 0, 0, 0.85);
+    letter-spacing: 1px;
+  }
+  .user-avatar {
+    margin-right: 20rpx;
+    margin-bottom: 0;
+    width: 86rpx;
+    height: 86rpx;
+    border-radius: 50%;
+    background-color: #47A04D;
+  }
+  .user-info {
+    flex: 1;
+    .user-name {
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 400;
+      font-size: 28rpx;
+      color: rgba(0, 0, 0, 0.85);
+    }
+  }
+  .user-points {
+    font-size: 28rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    color: #4caf50;
+  }
 }
 
-.rank-item .rank-number {
-  position: static;
-  width: 40rpx;
-  height: 40rpx;
-  background-color: #9e9e9e;
-  margin-right: 20rpx;
-}
+.user-rank-list-wrapper {
+  position: relative;
+  padding: 22rpx 26rpx;
+  box-sizing: border-box;
 
-.rank-item .user-avatar {
-  margin-right: 20rpx;
-  margin-bottom: 0;
-}
-
-.rank-item .user-info {
-  flex: 1;
-}
-
-.rank-item .user-points {
-  font-size: 26rpx;
-}
-
-.bottom-spacing {
-  height: 40rpx;
-  /* 添加底部间距，防止最后一个元素被遮挡 */
+  .user-rank-list-header {
+    box-sizing: border-box;
+    height: 44rpx;
+    width: 100%;
+    border: 12rpx solid #a0deab;
+    background-color: #368544;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 26rpx;
+    z-index: 1;
+  }
+  .user-rank-list {
+    position: inherit;
+    background-color: #fff;
+    border-radius: 0rpx 0rpx 8rpx 8rpx;
+    z-index: 10;
+    box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.15);
+  }
 }
 </style>
