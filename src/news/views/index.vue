@@ -6,19 +6,21 @@
       class="page-wrapper-content"
     >
       <view class="new-item" v-for="item in newsList" :key="item.id">
-        <view class="new-item-imgs">
-          <swiper
-            class="swiper"
-            circular
-            :indicator-dots="true"
-            :autoplay="true"
-            indicator-active-color="#fff"
+        <swiper
+          class="new-item-imgs"
+          circular
+          :indicator-dots="true"
+          :autoplay="true"
+          indicator-active-color="#fff"
+        >
+          <swiper-item
+            class="new-item-imgs-item"
+            v-for="img in item.imgs"
+            :key="img"
           >
-            <swiper-item v-for="img in item.imgs" :key="img">
-              <image :src="img" mode="aspectFill"></image>
-            </swiper-item>
-          </swiper>
-        </view>
+            <image :src="img" mode="aspectFill"></image>
+          </swiper-item>
+        </swiper>
         <view class="new-item-content">{{ item.content }}</view>
       </view>
     </scroll-view>
@@ -85,24 +87,29 @@ let newsList = ref([
     .new-item {
       background: #fff;
       margin-bottom: 40rpx;
-      border-radius: 8rpx;
+      border-radius: 32rpx 32rpx 8rpx 8rpx;
       &-imgs {
         width: 100%;
-        height: 400rpx;
-        box-shadow: 0px 2rpx 4rpx 0px rgba(0,0,0,0.22);
+        height: 300rpx;
         border-radius: 32rpx 32rpx 0px 0px;
-        .swiper {
+        &-item {
           width: 100%;
           height: 100%;
-          image {
+          border-radius: 32rpx 32rpx 0px 0px;
+          > image {
             width: 100%;
           }
         }
       }
       &-content {
         border-radius: 0px 0px 8rpx 8rpx;
-        box-shadow: 0px 2rpx 4rpx 0px rgba(0,0,0,0.22);
-        background: #FAFAFA;
+        box-shadow: 0px 2rpx 4rpx 0px rgba(0, 0, 0, 0.22);
+        background: #fafafa;
+        // 不换行 超过显示省略号
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 24rpx;
       }
     }
   }

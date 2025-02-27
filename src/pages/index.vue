@@ -8,6 +8,7 @@
       <view class="button" @click="navigatorTo('个人中心')">个人中心</view>
       <view class="button" @click="navigatorTo('资讯中心')">资讯中心</view>
     </view>
+	<!-- <van-overlay :show="true"/> -->
   </view>
 </template>
 
