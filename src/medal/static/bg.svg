@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="375px" height="262px" viewBox="0 0 375 262" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>编组 61</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="3.0713603%" y1="26.949051%" x2="96.9784963%" y2="72.3502004%" id="linearGradient-1">
+            <stop stop-color="#009E20" offset="0%"></stop>
+            <stop stop-color="#13C685" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0.95923913" width="375" height="264"></rect>
+        <linearGradient x1="72.0503107%" y1="40.3766721%" x2="41.2074094%" y2="83.3086361%" id="linearGradient-4">
+            <stop stop-color="#1FBF71" offset="0%"></stop>
+            <stop stop-color="#00A835" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="86.051973%" y1="43.3825484%" x2="24.0845753%" y2="53.5919458%" id="linearGradient-5">
+            <stop stop-color="#FFFFFF" stop-opacity="0.56678868" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.40234375" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="UI页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="电子勋章">
+            <g id="编组-61" transform="translate(0.000000, -3.000000)">
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <use id="矩形" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                <circle id="椭圆形" fill="url(#linearGradient-4)" mask="url(#mask-3)" cx="20.5" cy="19.4592391" r="94.5"></circle>
+                <circle id="椭圆形备份" fill="url(#linearGradient-5)" opacity="0.213378906" mask="url(#mask-3)" cx="173.5" cy="241.459239" r="94.5"></circle>
+                <circle id="椭圆形备份-2" fill="url(#linearGradient-5)" opacity="0.135218" mask="url(#mask-3)" cx="283.5" cy="101.459239" r="67.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

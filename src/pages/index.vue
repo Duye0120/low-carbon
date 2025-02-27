@@ -4,8 +4,9 @@
     <view class="button-group">
       <view class="button" @click="navigatorTo('场景切换')">场景切换</view>
       <view class="button" @click="navigatorTo('每日任务')">每日任务</view>
-      <view class="button" @click="navigatorTo('排行榜')">排行榜</view>
       <view class="button" @click="navigatorTo('个人中心')">个人中心</view>
+      <view class="button" @click="navigatorTo('我的勋章')">我的勋章</view>
+      <view class="button" @click="navigatorTo('积分规则')">积分规则</view>
       <view class="button" @click="navigatorTo('资讯中心')">资讯中心</view>
     </view>
 	<!-- <van-overlay :show="true"/> -->
@@ -48,7 +49,7 @@ const checkSignInStatus = () => {
   
   if (lastSignInDate !== today) {
     // 今天还没有签到，显示弹窗
-    showSignInOverlay.value = true
+    showSignInOverlay.value = false
   }
 }
 
@@ -82,10 +83,10 @@ const navigatorTo = (item: string) => {
       uni.navigateTo({ url: `/user/views/index` })
       break
     case '我的勋章':
-      uni.navigateTo({ url: `/pages/medal/index` })
+      uni.navigateTo({ url: `/medal/views/index` })
       break
     case '积分规则':
-      uni.navigateTo({ url: `/pages/integral/index` })
+      uni.navigateTo({ url: `/integral/index` })
       break
     case '资讯中心':
       uni.navigateTo({ url: `/news/views/index` })

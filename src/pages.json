@@ -70,15 +70,26 @@
           }
         }
       ]
+    },
+    {
+      "root": "medal",
+      "pages": [
+        {
+          "path": "views/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        }
+      ]
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "低碳生活",
-		"usingComponents": {
-			"van-icon": "/wxcomponents/vant/icon/index",
-			"van-overlay": "/wxcomponents/vant/overlay/index"
-		},
+    "usingComponents": {
+      "van-icon": "/wxcomponents/vant/icon/index",
+      "van-overlay": "/wxcomponents/vant/overlay/index"
+    },
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   }
