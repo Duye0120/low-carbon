@@ -2,7 +2,7 @@
   <view class="page-wrapper">
     <view class="page-header">
       <image class="avatar" src="../static/message.png" mode="widthFix" />
-      <view class="userName">用户昵称12138</view>
+      <view class="userName">{{ info.nickName }}</view>
     </view>
     <view class="page-middle">
       <view class="middle-item" v-for="item in recordList" :key="item.label">
@@ -35,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+import { onShow } from "@dcloudio/uni-app";
 import { ref } from "vue";
 let recordList = ref([
   {
@@ -53,21 +54,25 @@ let recordList = ref([
 let list = ref([
   {
     icon: "../static/mine.png",
+    route: "/user/views/my-info",
     extra: "",
     title: "个人信息",
   },
   {
     icon: "../static/password.png",
+    route: "/user/views/integral-record",
     extra: "",
     title: "积分记录",
   },
   {
     icon: "../static/message.png",
+    route: "/user/views/feedback",
     extra: "期待您的意见",
     title: "意见反馈",
   },
   {
     icon: "../static/account.png",
+    route: "/user/views/setting",
     extra: "",
     title: "设置",
   },
@@ -76,35 +81,10 @@ let messageAccount = ref(0);
 let info = uni.getStorageSync("info");
 let roleName = uni.getStorageSync("roleName");
 console.log(info);
-const toSomePage = (item: { title: string }) => {
-  let title = item.title;
-  if (title == "修改密码") {
-    uni.navigateTo({
-      url: "updatePassword",
-    });
-  } else if (title == "账号管理") {
-    uni.navigateTo({
-      url: "accountManage",
-    });
-  } else if (title == "个人信息") {
-    uni.navigateTo({
-      url: "detail",
-    });
-  } else if (title == "通知公告") {
-    uni.navigateTo({
-      url: "../notice/index",
-    });
-  } else if (title == "关于我们") {
-    uni.navigateTo({
-      url: "aboutUs",
-    });
-  }
-};
-
-const goToMessage = () => {
+const toSomePage = (item: { title: string; route: string }) => {
   uni.navigateTo({
-    url: "/pages/index/message",
-  });
+    url: item.route,
+  })
 };
 </script>
 
