@@ -90,13 +90,13 @@ const currentDay = ref(3);
 
 // 签到奖励配置
 const rewards = ref([
-  { day: "一", value: 5, url: "../../static/1point.png", point: 1 },
-  { day: "二", value: 10, url: "../../static/1point.png", point: 1 },
-  { day: "三", value: 15, url: "../../static/2point.png", point: 3 },
-  { day: "四", value: 20, url: "../../static/2point.png", point: 3 },
-  { day: "五", value: 25, url: "../../static/3point.png", point: 3 },
-  { day: "六", value: 30, url: "../../static/3point.png", point: 3 },
-  { day: "七", value: 50, url: "../../static/6point.png", point: 6 },
+  { day: "一", value: 5, url: "../static/1point.png", point: 1 },
+  { day: "二", value: 10, url: "../static/1point.png", point: 1 },
+  { day: "三", value: 15, url: "../static/2point.png", point: 3 },
+  { day: "四", value: 20, url: "../static/2point.png", point: 3 },
+  { day: "五", value: 25, url: "../static/3point.png", point: 3 },
+  { day: "六", value: 30, url: "../static/3point.png", point: 3 },
+  { day: "七", value: 50, url: "../static/6point.png", point: 6 },
 ]);
 
 // 点击蒙层
