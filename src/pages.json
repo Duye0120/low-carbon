@@ -105,7 +105,9 @@
     "usingComponents": {
       "van-icon": "/wxcomponents/vant/icon/index",
       "van-overlay": "/wxcomponents/vant/overlay/index",
-      "van-popup": "/wxcomponents/vant/popup/index"
+      "van-popup": "/wxcomponents/vant/popup/index",
+			"van-cell-group": "/wxcomponents/vant/cell-group/index",
+			"van-cell": "/wxcomponents/vant/cell/index"
     },
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
