@@ -44,6 +44,21 @@
         <view @click="navigatorTo('资讯中心')">资讯中心</view>
       </view>
     </view>
+    <van-popup
+      :show="popupVisible"
+      closeable
+      round
+      position="bottom"
+      custom-style="height: 80%; overflow:visible;border-radius: 40rpx 40rpx 0rpx 0rpx;"
+      @close="closePopup"
+    >
+      <view class="popup-content">
+        <view class="popup-title">场景切换</view>
+        <view class="popup-scene">
+          <SceneContent type="popup" v-on:close-popup="closePopup" />
+        </view>
+      </view>
+    </van-popup>
 
     <!-- 签到弹窗组件 -->
     <SignInOverlay
@@ -51,17 +66,32 @@
       @close="handleCloseSignIn"
       @sign-in="handleSignIn"
     />
+    <!-- 模态弹窗 -->
+    <van-popup ref="popupRef" position="bottom" round :show="false">
+      <view> 获取您的昵称和头像 </view>
+      <view> 在"个人中心"页面中展示昵称和头像 </view>
+      <view>
+        头像
+        <image class="avatar" src="/static/avatar.png" />
+      </view>
+      <view
+        >昵称
+        <input type="nickname" class="weui-input" placeholder="请输入昵称" />
+      </view>
+    </van-popup>
   </view>
 </template>
 
 <script setup lang="ts">
 import { onShow } from "@dcloudio/uni-app";
 import { ref, onMounted, onUnmounted } from "vue";
-import SignInOverlay from "./components/SignInOverlay.vue";
+import SignInOverlay from "../components/SignInOverlay.vue";
+import SceneContent from "../components/SceneContent.vue";
 
 const title = ref("Hello");
 // 控制签到弹窗显示
 const showSignInOverlay = ref(false);
+const popupVisible = ref(false);
 
 // 页面加载时显示签到弹窗
 onMounted(() => {
@@ -104,10 +134,10 @@ const navigatorTo = (item: string) => {
   console.log(item);
   switch (item) {
     case "每日任务":
-      uni.navigateTo({ url: `/main/index?tab=task` });
+      showSignInOverlay.value = true;
       break;
     case "场景切换":
-      uni.navigateTo({ url: `/main/index?tab=scene` });
+      showPopup();
       break;
     case "排行榜":
       uni.navigateTo({ url: `/main/index?tab=ranking` });
@@ -132,20 +162,18 @@ onShow(() => {
     provider: "weixin",
     success: function (loginRes) {
       console.log(loginRes, 111);
-      // 获取用户信息
-      uni.getUserProfile({
-        desc: "用于登录",
-        lang: "zh_CN",
-        success: function (infoRes) {
-          console.log(infoRes, 222);
-        },
-        fail: (err) => {
-          console.log(err);
-        },
-      });
     },
   });
 });
+
+const showPopup = () => {
+  console.log("showPopup");
+  popupVisible.value = true;
+};
+const closePopup = () => {
+  console.log("closePopup");
+  popupVisible.value = false;
+};
 </script>
 
 <style scoped lang="scss">
@@ -251,5 +279,43 @@ onShow(() => {
   color: #38b868;
   font-family: PingFangSC, PingFang SC;
   font-weight: 500;
+}
+.popup-content {
+  padding: 80rpx 20rpx 20rpx 20rpx;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    #93dea6 0%,
+    #d8eede 14%,
+    #f4f5f4 22%,
+    #f5f5f5 100%
+  );
+  border-radius: 40rpx 40rpx 0rpx 0rpx;
+  box-sizing: border-box;
+}
+.popup-title {
+  font-size: 32rpx;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  color: #016629;
+  width: 370rpx;
+  height: 76rpx;
+  position: absolute;
+  top: -38rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background-image: url("../static/popup-change-scene.png");
+  background-size: 100% 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999999999;
+}
+
+.popup-scene {
+  width: 100%;
+  height: 100%;
 }
 </style>
