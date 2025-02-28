@@ -88,9 +88,6 @@ const navigatorTo = (item: string) => {
     case "每日任务":
       uni.navigateTo({ url: `/main/index?tab=task` });
       break;
-    case "场景切换":
-      uni.navigateTo({ url: `/main/index?tab=scene` });
-      break;
     case "排行榜":
       uni.navigateTo({ url: `/main/index?tab=ranking` });
       break;
@@ -128,11 +125,9 @@ onShow(() => {
 });
 
 const showPopup = () => {
-  console.log("showPopup");
   popupVisible.value = true;
 };
 const closePopup = () => {
-  console.log("closePopup");
   popupVisible.value = false;
 };
 </script>
