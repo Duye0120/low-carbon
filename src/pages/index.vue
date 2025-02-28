@@ -167,11 +167,9 @@ onShow(() => {
 });
 
 const showPopup = () => {
-  console.log("showPopup");
   popupVisible.value = true;
 };
 const closePopup = () => {
-  console.log("closePopup");
   popupVisible.value = false;
 };
 </script>
