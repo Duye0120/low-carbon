@@ -85,8 +85,8 @@
 <script setup lang="ts">
 import { onShow } from "@dcloudio/uni-app";
 import { ref, onMounted, onUnmounted } from "vue";
-import SignInOverlay from "../components/SignInOverlay.vue";
-import SceneContent from "../components/SceneContent.vue";
+import SignInOverlay from "@/components/SignInOverlay.vue";
+import SceneContent from "@/components/SceneContent.vue";
 
 const title = ref("Hello");
 // 控制签到弹窗显示
