@@ -3,7 +3,7 @@
     {
       "path": "pages/index",
       "style": {
-        "navigationBarTitleText": "低碳生活"
+        "navigationStyle": "custom"
       }
     }
   ],
