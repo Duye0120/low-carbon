@@ -27,7 +27,7 @@
       <!-- 可滚动的内容区域 -->
       <view class="scrollable-content">
         <!-- 场景切换 -->
-        <SceneContent v-if="activeTab === 'scene'" />
+        <SceneContent v-if="activeTab === 'scene'" type="page" />
 
         <!-- 任务列表 -->
         <TaskContent v-if="activeTab === 'task'" />
@@ -43,7 +43,7 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
 import CommonHeader from "./components/CommonHeader.vue";
-import SceneContent from "./components/content/SceneContent.vue";
+import SceneContent from "../components/SceneContent.vue";
 import TaskContent from "./components/content/TaskContent.vue";
 import RankingContent from "./components/content/RankingContent.vue";
 import { SecneType } from "./components/type.d";
@@ -136,15 +136,15 @@ onLoad(() => {
 const getPrimaryColorByScene = (sceneId: SecneType): string => {
   switch (sceneId) {
     case "hydrogenVehicle":
-      return "#EDEA7F";
+      return "#D5D463";
     case "gasElectricity":
-      return "#7CCFFB";
+      return "#816A69";
     case "water":
-      return "#F7FDD6";
+      return "#4AB8D7";
     case "bike":
-      return "#4da050";
+      return "#4DA050";
     case "zeroCarbonHouse":
-      return "#87E2BE";
+      return "#87E3BE";
     default:
       return "#4da050";
   }

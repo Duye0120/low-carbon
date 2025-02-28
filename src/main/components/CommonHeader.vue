@@ -35,9 +35,9 @@ const getBannerSrcByKey = (key: SecneType): string => {
     case "hydrogenVehicle":
       return "../static/changeScene/hydrogenVehicle.png";
     case "gasElectricity":
-      return "../static/changeScene/gasElectricity.svg";
+      return "../static/changeScene/gasElectricity.png";
     case "water":
-      return "../static/changeScene/water.svg";
+      return "../static/changeScene/water.png";
     case "bike":
       return "../static/changeScene/bike.png";
     case "zeroCarbonHouse":
