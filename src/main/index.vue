@@ -136,7 +136,7 @@ onLoad(() => {
 const getPrimaryColorByScene = (sceneId: SecneType): string => {
   switch (sceneId) {
     case "hydrogenVehicle":
-      return "#D5D463";
+      return "#D6D45D";
     case "gasElectricity":
       return "#816A69";
     case "water":
@@ -163,7 +163,7 @@ const getPrimaryColorByScene = (sceneId: SecneType): string => {
 }
 
 .content {
-  height: calc(100% - 432rpx);
+  height: calc(100% - 592rpx);
   /* 占用剩余空间 */
   display: flex;
   flex-direction: column;
@@ -175,7 +175,8 @@ const getPrimaryColorByScene = (sceneId: SecneType): string => {
   flex-shrink: 0;
   /* 防止头部区域被压缩 */
   z-index: 10;
-  height: 432rpx;
+  height: 592rpx;
+  width: 100%;
   overflow: hidden;
 }
 

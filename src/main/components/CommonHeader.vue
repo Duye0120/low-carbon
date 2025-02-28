@@ -88,29 +88,31 @@ onLoad(() => {
   height: 100%;
   position: relative;
   background-color: #bbf3e6;
+  overflow: hidden;
 }
 
 .banner {
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .banner-image {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .user-info {
   position: absolute;
-  top: 20rpx;
-  left: 20rpx;
+  top: 160rpx;
+  left: 40rpx;
   z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: center;
-  /* background-color: rgba(255, 255, 255, 0.8); */
-  border-radius: 30rpx;
-  padding: 10rpx 20rpx;
+  width: calc(100% - 80rpx);
 }
 
 .avatar-wrapper {
@@ -120,8 +122,9 @@ onLoad(() => {
   overflow: hidden;
   margin-right: 10rpx;
   background-color: #fff;
-  position: absolute;
-  left: 0;
+  position: relative;
+  z-index: 2;
+  border: 2rpx solid #ffffff;
 }
 
 .avatar {
@@ -135,9 +138,11 @@ onLoad(() => {
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.7);
   height: 90rpx;
-  width: fit-content;
-  padding: 0 35rpx 0 100rpx;
+  padding: 0 35rpx 0 120rpx;
   border-radius: 45rpx;
+  position: relative;
+  left: -100rpx;
+  z-index: 1;
 }
 
 .username {
