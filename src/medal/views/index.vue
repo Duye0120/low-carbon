@@ -5,6 +5,7 @@
         <image class="avatar" src="/static/logo.png" mode="widthFix" />
         <view class="recordList">
           <view
+            @click="routeTo(item)"
             class="recordList-item"
             v-for="item in recordList"
             :key="item.label"
@@ -88,9 +89,9 @@
         >
           <image src="../static/entityMedal.png" mode="widthFix"></image>
           <view class="page-wrapper-content-entityList-item-content">
-            <view class="page-wrapper-content-entityList-item-content-title">{{
-              item.name
-            }}</view>
+            <view class="page-wrapper-content-entityList-item-content-title"
+              >{{ item.name }}（可至线下领取）</view
+            >
             <view
               class="page-wrapper-content-entityList-item-content-describe"
               >{{ item.describe }}</view
@@ -100,7 +101,18 @@
                 <view class="exchange-left-number">{{ item.cost }}</view>
                 <view class="exchange-left-name">电子勋章</view>
               </view>
-              <view class="exchange-right">兑换</view>
+              <view class="exchange-right">
+                <button
+                  :class="{
+                    'submit-button': !item.hasExchange,
+                    'submit-button-disabled': item.hasExchange,
+                  }"
+                  type="button"
+                  plain
+                >
+                  兑换
+                </button></view
+              >
             </view>
           </view>
         </view>
@@ -249,19 +261,28 @@ let recordList = ref([
   {
     label: "零碳积分",
     value: 300,
+    url: "/user/views/integral-record",
   },
   {
     label: "电子勋章",
     value: 5,
+    url: "/medal/views/myCorpuscle",
   },
   {
     label: "兑换券",
     value: 1,
+    url: "/medal/views/certificate",
   },
 ]);
 const changeTab = (tab: string) => {
   console.log(tab);
   activeTab.value = tab;
+};
+const routeTo = (item: any) => {
+  console.log(item);
+  uni.navigateTo({
+    url: item.url,
+  });
 };
 </script>
 
@@ -378,12 +399,49 @@ const changeTab = (tab: string) => {
             font-weight: 400;
             font-size: 24rpx;
             color: rgba(0, 0, 0, 0.65);
+            margin-top: 8rpx;
           }
           &-exchange {
             display: flex;
             justify-content: space-between;
+            margin-top: 28rpx;
+            align-items: baseline;
             .exchange-left {
               display: flex;
+              align-items: baseline;
+              &-number {
+                font-family: PingFangSC, PingFang SC;
+                font-weight: 400;
+                font-size: 36rpx;
+                color: #06ac44;
+              }
+              &-name {
+                font-family: PingFangSC, PingFang SC;
+                font-weight: 400;
+                font-size: 24rpx;
+                color: rgba(0, 0, 0, 0.65);
+              }
+            }
+            .exchange-right {
+              .submit-button {
+                width: 100%;
+                height: 56rpx;
+                border-radius: 8rpx;
+                color: #ffffff;
+                line-height: 56rpx;
+                background-color: #3bb872;
+                border: none;
+              }
+
+              .submit-button-disabled {
+                width: 100%;
+                height: 56rpx;
+                border-radius: 8rpx;
+                color: rgba(0, 0, 0, 0.25);
+                line-height: 56rpx;
+                background-color: #d9d9d9;
+                border: none;
+              }
             }
           }
         }

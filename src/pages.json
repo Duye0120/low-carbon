@@ -79,6 +79,22 @@
           "style": {
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "views/myCorpuscle",
+          "style": {
+            "navigationBarTitleText": "电子勋章",
+            "navigationBarTextStyle": "black",
+            "navigationBarBackgroundColor": "#F1F8FF"
+          }
+        },
+        {
+          "path": "views/certificate",
+          "style": {
+            "navigationBarTitleText": "我的兑换券",
+            "navigationBarTextStyle": "black",
+            "navigationBarBackgroundColor": "#F1F8FF"
+          }
         }
       ]
     }
