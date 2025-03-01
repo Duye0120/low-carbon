@@ -2,11 +2,7 @@
   <view class="page-content">
     <view class="user-info">
       <view class="avatar-wrapper">
-        <image
-          class="avatar"
-          :src="info ? info.avatar : '/static/avatar.png'"
-          mode="aspectFill"
-        ></image>
+        <image class="avatar" :src="info ? info.avatar : '/static/avatar.png'" mode="aspectFill"></image>
       </view>
       <view class="user-details">
         <view class="username">{{ info ? info.name : "游客" }}</view>
@@ -18,40 +14,18 @@
     </view>
     <view class="page-content-menu">
       <view class="page-content-menu-top">
-        <view
-          @click="navigatorTo('每日任务')"
-          class="page-content-menu-top-afterBoard"
-          >每日任务</view
-        >
+        <view @click="navigatorTo('每日任务')" class="page-content-menu-top-afterBoard">每日任务</view>
         <view @click="navigatorTo('场景切换')">场景切换</view>
       </view>
       <view class="page-content-menu-bottom">
-        <view
-          @click="navigatorTo('个人中心')"
-          class="page-content-menu-top-afterBoard"
-          >个人中心</view
-        >
-        <view
-          @click="navigatorTo('我的勋章')"
-          class="page-content-menu-top-afterBoard"
-          >我的勋章</view
-        >
-        <view
-          @click="navigatorTo('积分规则')"
-          class="page-content-menu-top-afterBoard"
-          >积分规则</view
-        >
+        <view @click="navigatorTo('个人中心')" class="page-content-menu-top-afterBoard">个人中心</view>
+        <view @click="navigatorTo('我的勋章')" class="page-content-menu-top-afterBoard">我的勋章</view>
+        <view @click="navigatorTo('积分规则')" class="page-content-menu-top-afterBoard">积分规则</view>
         <view @click="navigatorTo('资讯中心')">资讯中心</view>
       </view>
     </view>
-    <van-popup
-      :show="popupVisible"
-      closeable
-      round
-      position="bottom"
-      custom-style="height: 80%; overflow:visible;border-radius: 40rpx 40rpx 0rpx 0rpx;"
-      @close="closePopup"
-    >
+    <van-popup :show="popupVisible" closeable round position="bottom"
+      custom-style="height: 80%; overflow:visible;border-radius: 40rpx 40rpx 0rpx 0rpx;" @close="closePopup">
       <view class="popup-content">
         <view class="popup-title">场景切换</view>
         <view class="popup-scene">
@@ -61,11 +35,7 @@
     </van-popup>
 
     <!-- 签到弹窗组件 -->
-    <SignInOverlay
-      v-model:show="showSignInOverlay"
-      @close="handleCloseSignIn"
-      @sign-in="handleSignIn"
-    />
+    <SignInOverlay v-model:show="showSignInOverlay" @close="handleCloseSignIn" @sign-in="handleSignIn" />
     <!-- 模态弹窗 -->
     <van-popup ref="popupRef" position="bottom" round :show="false">
       <view> 获取您的昵称和头像 </view>
@@ -74,8 +44,7 @@
         头像
         <image class="avatar" src="/static/avatar.png" />
       </view>
-      <view
-        >昵称
+      <view>昵称
         <input type="nickname" class="weui-input" placeholder="请输入昵称" />
       </view>
     </van-popup>
@@ -182,16 +151,20 @@ const closePopup = () => {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
   &-map {
     width: 100%;
-    > image {
+
+    >image {
       width: 100%;
     }
   }
+
   &-menu {
     padding: 22rpx 44rpx 40rpx 44rpx;
     height: 196rpx;
     width: calc(100% - 88rpx);
+
     &-top {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -200,20 +173,29 @@ const closePopup = () => {
       height: 124rpx;
       text-align: center;
       line-height: 124rpx;
+
       &-afterBoard {
         position: relative;
+
         &::after {
           content: "";
           position: absolute;
-          right: 0; /* 定位到右侧 */
-          top: 50%; /* 垂直居中 */
-          transform: translateY(-50%); /* 微调居中位置 */
-          width: 1px; /* 边框粗细 */
-          height: 50%; /* 边框高度为父元素的 50% */
-          background: rgba(0, 0, 0, 0.45); /* 边框颜色 */
+          right: 0;
+          /* 定位到右侧 */
+          top: 50%;
+          /* 垂直居中 */
+          transform: translateY(-50%);
+          /* 微调居中位置 */
+          width: 1px;
+          /* 边框粗细 */
+          height: 50%;
+          /* 边框高度为父元素的 50% */
+          background: rgba(0, 0, 0, 0.45);
+          /* 边框颜色 */
         }
       }
     }
+
     &-bottom {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -224,6 +206,7 @@ const closePopup = () => {
     }
   }
 }
+
 .user-info {
   position: absolute;
   top: 160rpx;
@@ -278,21 +261,21 @@ const closePopup = () => {
   font-family: PingFangSC, PingFang SC;
   font-weight: 500;
 }
+
 .popup-content {
   padding: 80rpx 20rpx 20rpx 20rpx;
   width: 100%;
   height: 100%;
   position: relative;
-  background: linear-gradient(
-    180deg,
-    #93dea6 0%,
-    #d8eede 14%,
-    #f4f5f4 22%,
-    #f5f5f5 100%
-  );
+  background: linear-gradient(180deg,
+      #93dea6 0%,
+      #d8eede 14%,
+      #f4f5f4 22%,
+      #f5f5f5 100%);
   border-radius: 40rpx 40rpx 0rpx 0rpx;
   box-sizing: border-box;
 }
+
 .popup-title {
   font-size: 32rpx;
   font-family: PingFangSC, PingFang SC;
