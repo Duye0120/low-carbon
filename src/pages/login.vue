@@ -17,11 +17,21 @@
                 </label>
             </checkbox-group>
         </view>
-        <button class="login-btn" :class="{ 'login-btn-disabled': !isAgreed }" type="button" @click="handleLogin"
+        <button class="login-btn" :class="{ 'login-btn-disabled': !isAgreed }" type="button" @click="openPopup"
             :disabled="!isAgreed">
             进入零碳小精灵
         </button>
 
+
+        <van-popup :show="popupVisible" round position="bottom" custom-style="height: 35%;padding: 30rpx"
+            @close="closePopup">
+            <view class="popup-content">
+                <view class="popup-title">场景切换</view>
+                <view class="popup-scene">
+                    content
+                </view>
+            </view>
+        </van-popup>
         <!-- <view class="agreement">
             <checkbox-group @change="handleAgreementChange">
                 <label class="checkbox-label">
@@ -41,6 +51,15 @@ import { ref } from 'vue';
 
 const loading = ref(false);
 const isAgreed = ref(false);
+const popupVisible = ref(false);
+
+const closePopup = () => {
+    popupVisible.value = false;
+}
+
+const openPopup = () => {
+    popupVisible.value = true;
+}
 
 // 处理协议同意状态变更
 const handleAgreementChange = (e: any) => {
