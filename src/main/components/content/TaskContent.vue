@@ -57,6 +57,20 @@ const tasks = ref([
 // 完成任务
 const completeTask = (index: number) => {
   tasks.value[index].completed = true;
+  switch (tasks.value[index].type) {
+    case 'checkin':
+      // 签到
+      break;
+    case 'quiz':
+      uni.navigateTo({
+        url: '/main/question-answer'
+      })
+      // 答题
+      break;
+    case 'browse':
+      // 浏览
+      break;
+  }
 };
 
 const renderType = (type: string) => {

@@ -36,20 +36,20 @@
                 </view>
                 <view class="popup-line">
                     <view class="popup-line-label">头像</view>
-                    <button class="avatar-wrapper" open-type="chooseAvatar">
+                    <button @chooseavatar="onChooseAvatar" class="avatar-wrapper" open-type="chooseAvatar">
                         <image style="width: 82rpx;" mode="widthFix"
                             :src="avatarUrl ? avatarUrl : '/static/avatar.png'" />
                     </button>
                 </view>
                 <view class="popup-line">
                     <view class="popup-line-label">昵称</view>
-                    <input type="nickname" class="weui-input" placeholder="请输入昵称" />
+                    <input @input="inputChange" type="nickname" class="weui-input" placeholder="请输入昵称" />
                 </view>
                 <view class="popup-buttonLine">
-                    <button class="refuseDisabled" type="button" plain>
+                    <button @click="closePopup" class="refuseDisabled" type="button" plain>
                         拒绝
                     </button>
-                    <button @tap="formActive ? handleLogin : null" :class="formActive ? 'allowd' : 'allowDisabled'" class="submit-button" type="button" plain>
+                    <button @click="handleLogin" :class="formActive ? 'allowd' : 'allowDisabled'" class="submit-button" type="button" plain>
                         允许
                     </button>
                 </view>
@@ -65,6 +65,7 @@ const loading = ref(false);
 const isAgreed = ref(false);
 const popupVisible = ref(false);
 let formActive = ref(false)
+let nickName = ref("")
 
 const closePopup = () => {
     popupVisible.value = false;
@@ -97,8 +98,20 @@ const showPrivacy = () => {
     });
 };
 
+const inputChange = (e: any) => {
+    console.log(e)
+    formActive.value = e.detail.value.length > 0
+    nickName.value = e.detail.value
+}
+
+const onChooseAvatar = (e: any) => {
+  console.log(e);
+  avatarUrl.value = e.detail.avatarUrl;
+};
+
 // 处理登录
 const handleLogin = () => {
+    if (!formActive.value) return
     if (!isAgreed.value) {
         uni.showToast({
             title: '请先同意用户协议和隐私政策',
@@ -114,6 +127,10 @@ const handleLogin = () => {
         provider: 'weixin',
         success: function (loginRes) {
             console.log('登录成功', loginRes);
+            uni.setStorageSync('info', {
+                avatarUrl: avatarUrl.value,
+                nickName: nickName.value
+            })
             uni.reLaunch({
                 url: '/pages/index'
             });

@@ -11,7 +11,13 @@
             <image
               style="width: 64rpx; margin-right: 16rpx"
               mode="widthFix"
-              :src="avatarUrl ? avatarUrl : '/static/avatar.png'"
+              :src="
+                info
+                  ? info.avatarUrl
+                    ? info.avatarUrl
+                    : '/static/avatar.png'
+                  : '/static/avatar.png'
+              "
             />
             <van-icon name="arrow" />
           </button>
@@ -19,7 +25,12 @@
       </van-cell>
       <van-cell title="昵称">
         <template #right-icon>
-          <input type="nickname" class="weui-input" placeholder="请输入昵称"/>
+          <input
+            :value="info.nickName"
+            type="nickname"
+            class="weui-input"
+            placeholder="请输入昵称"
+          />
         </template>
       </van-cell>
     </van-cell-group>
@@ -27,12 +38,20 @@
 </template>
 
 <script setup lang="ts">
+import { onLoad } from "@dcloudio/uni-app";
 import { ref } from "vue";
 let avatarUrl = ref("");
+let info = ref<any>({
+  avatarUrl: "",
+  nickName: "",
+});
 const onChooseAvatar = (e: any) => {
   console.log(e);
   avatarUrl.value = e.detail.avatarUrl;
 };
+onLoad(() => {
+  info.value = uni.getStorageSync("info");
+});
 </script>
 
 <style scoped lang="scss">

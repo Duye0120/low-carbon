@@ -18,7 +18,7 @@ const checkLoginStatus = () => {
 // onLaunch(() => {
 // });
 onLaunch(() => {
-  checkLoginStatus();
+  // checkLoginStatus();
   console.log("App Launch");
 });
 onShow(() => {

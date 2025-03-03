@@ -1,7 +1,7 @@
 <template>
   <view class="page-wrapper">
     <view class="page-header">
-      <image class="avatar" src="../static/message.png" mode="widthFix" />
+      <image class="avatar" :src="info ? info.avatarUrl ? info.avatarUrl : '/static/avatar.png' : '/static/avatar.png'" mode="widthFix" />
       <view class="userName">{{ info.nickName }}</view>
     </view>
     <view class="page-middle">
@@ -79,8 +79,6 @@ let list = ref([
 ]);
 let messageAccount = ref(0);
 let info = uni.getStorageSync("info");
-let roleName = uni.getStorageSync("roleName");
-console.log(info);
 const toSomePage = (item: { title: string; route: string }) => {
   uni.navigateTo({
     url: item.route,

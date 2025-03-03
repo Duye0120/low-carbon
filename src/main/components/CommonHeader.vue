@@ -33,17 +33,17 @@ const bannerSrc = ref<string>("");
 const getBannerSrcByKey = (key: SecneType): string => {
   switch (key) {
     case "hydrogenVehicle":
-      return "../../static/changeScene/hydrogenVehicleBanner.png";
+      return "../static/hydrogenVehicleBanner.png";
     case "gasElectricity":
-      return "../../static/changeScene/gasElectricityBanner.png";
+      return "../static/gasElectricityBanner.png";
     case "water":
-      return "../../static/changeScene/waterBanner.png";
+      return "../static/waterBanner.png";
     case "bike":
-      return "../../static/changeScene/bikeBanner.png";
+      return "../static/bikeBanner.png";
     case "zeroCarbonHouse":
-      return "../../static/changeScene/zeroCarbonHouseBanner.png";
+      return "../static/zeroCarbonHouseBanner.png";
     default:
-      return "../../static/changeScene/hydrogenVehicleBanner.png";
+      return "../static/hydrogenVehicleBanner.png";
   }
 };
 

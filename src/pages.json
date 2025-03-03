@@ -1,13 +1,13 @@
 {
   "pages": [
     {
-      "path": "pages/login",
+      "path": "pages/index",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/index",
+      "path": "pages/login",
       "style": {
         "navigationStyle": "custom"
       }
@@ -73,6 +73,23 @@
           "path": "index",
           "style": {
             "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "question-answer",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        }
+      ]
+    },
+    {
+      "root": "report",
+      "pages": [
+        {
+          "path": "views/index",
+          "style": {
+            "navigationBarTitleText": "生成报告"
           }
         }
       ]
