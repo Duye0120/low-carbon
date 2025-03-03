@@ -26,32 +26,45 @@
         <van-popup :show="popupVisible" round position="bottom" custom-style="height: 35%;padding: 30rpx"
             @close="closePopup">
             <view class="popup-content">
-                <view class="popup-title">场景切换</view>
-                <view class="popup-scene">
-                    content
+                <view class="popup-title">
+                    <image mode="widthFix" src="/static/login-avatar.png" />
+                    <view class="popup-title-text">零碳小精灵&nbsp;申请</view>
+                </view>
+                <view class="popup-describe">
+                    <view class="popup-describe-top">获取您的昵称和头线</view>
+                    <view class="popup-describe-bottom">在"我的"页面中展示昵称和头线</view>
+                </view>
+                <view class="popup-line">
+                    <view class="popup-line-label">头像</view>
+                    <button class="avatar-wrapper" open-type="chooseAvatar">
+                        <image style="width: 82rpx;" mode="widthFix"
+                            :src="avatarUrl ? avatarUrl : '/static/avatar.png'" />
+                    </button>
+                </view>
+                <view class="popup-line">
+                    <view class="popup-line-label">昵称</view>
+                    <input type="nickname" class="weui-input" placeholder="请输入昵称" />
+                </view>
+                <view class="popup-buttonLine">
+                    <button class="refuseDisabled" type="button" plain>
+                        拒绝
+                    </button>
+                    <button @tap="formActive ? handleLogin : null" :class="formActive ? 'allowd' : 'allowDisabled'" class="submit-button" type="button" plain>
+                        允许
+                    </button>
                 </view>
             </view>
         </van-popup>
-        <!-- <view class="agreement">
-            <checkbox-group @change="handleAgreementChange">
-                <label class="checkbox-label">
-                    <checkbox value="agree" :checked="isAgreed" color="#07c160" style="transform: scale(0.7);" />
-                    <text>我已阅读并同意</text>
-                    <text class="link" @click="showTerms">《用户协议》</text>
-                    <text>和</text>
-                    <text class="link" @click="showPrivacy">《隐私政策》</text>
-                </label>
-            </checkbox-group>
-        </view> -->
     </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-
+let avatarUrl = ref("")
 const loading = ref(false);
 const isAgreed = ref(false);
 const popupVisible = ref(false);
+let formActive = ref(false)
 
 const closePopup = () => {
     popupVisible.value = false;
@@ -144,7 +157,7 @@ const handleLogin = () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
+    height: calc(100% - 120rpx);
     background-color: #f8f8f8;
 
     .logo {
@@ -210,6 +223,121 @@ const handleLogin = () => {
         .link {
             color: #52C41A;
             margin: 0 4rpx;
+        }
+    }
+}
+
+.popup-content {
+
+    .popup-title {
+        display: flex;
+        align-items: center;
+
+        >image {
+            width: 40rpx;
+            margin-right: 16rpx;
+        }
+
+        &-text {
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 500;
+            font-size: 28rpx;
+            color: #000000;
+        }
+    }
+
+    .popup-describe {
+        margin-top: 56rpx;
+
+        &-top {
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 500;
+            font-size: 32rpx;
+            color: #000000;
+        }
+
+        &-bottom {
+            margin-top: 6rpx;
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 400;
+            font-size: 22rpx;
+            color: rgba(0, 0, 0, 0.45);
+        }
+    }
+
+    .popup-line {
+        display: flex;
+        align-items: center;
+        margin-top: 36rpx;
+
+        &-label {
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 400;
+            font-size: 28rpx;
+            color: rgba(0, 0, 0, 0.85);
+            margin-right: 60rpx;
+        }
+
+        .avatar-wrapper {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            color: inherit;
+            font: inherit;
+            padding: 0;
+            margin: 0;
+
+            &::after {
+                border: none;
+            }
+        }
+    }
+
+    .popup-buttonLine {
+        display: flex;
+        margin-top: 28rpx;
+
+        .refuseDisabled {
+            border: none;
+            width: 238rpx;
+            height: 80rpx;
+            background: #F2F2F2;
+            border-radius: 4rpx;
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 400;
+            font-size: 28rpx;
+            color: #1FBD6E;
+            line-height: 80rpx;
+            text-align: center;
+        }
+
+        .allowDisabled {
+            border: none;
+            width: 238rpx;
+            height: 80rpx;
+            background: #84CAA6;
+            border-radius: 4rpx;
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 400;
+            font-size: 28rpx;
+            color: #FFFFFF;
+            line-height: 80rpx;
+            text-align: center;
+        }
+
+        .allowd {
+            border: none;
+            width: 238rpx;
+            height: 80rpx;
+            background: #03C15F;
+            border-radius: 4rpx;
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 400;
+            font-size: 28rpx;
+            color: #FFFFFF;
+            line-height: 80rpx;
+            text-align: center;
         }
     }
 }
