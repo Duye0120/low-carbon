@@ -2,119 +2,51 @@
   <view class="page-content">
     <view class="user-info">
       <view class="avatar-wrapper">
-        <image
-          class="avatar"
-          :src="
-            info
-              ? info.avatarUrl
-                ? info.avatarUrl
-                : '/static/avatar.png'
-              : '/static/avatar.png'
-          "
-          mode="aspectFill"
-        ></image>
+        <image class="avatar" :src="info
+          ? info.avatarUrl
+            ? info.avatarUrl
+            : '/static/avatar.png'
+          : '/static/avatar.png'
+          " mode="aspectFill"></image>
       </view>
       <view class="user-details">
         <view class="username">{{ info ? info.nickName : "游客" }}</view>
         <view class="points">积分 304</view>
       </view>
     </view>
-    <image
-      class="ball"
-      :style="'left:' + moveX + 'px;top:' + moveY + 'px'"
-      @touchstart="drag_start"
-      @touchmove.stop="drag_hmove"
-      src="/static/generate-report.png"
-      mode="aspectFit"
-      @tap="add"
-    ></image>
+    <image class="ball" :style="'left:' + moveX + 'px;top:' + moveY + 'px'" @touchstart="drag_start"
+      @touchmove.stop="drag_hmove" src="/static/generate-report.png" mode="aspectFit" @tap="add"></image>
     <view class="start-journey">
       开始旅程
       <van-icon name="arrow" />
     </view>
     <view class="page-content-map">
-      <image
-        class="map-image"
-        src="/static/homePage.png"
-        mode="widthFix"
-      ></image>
-      <image
-        @touchstart="onFocus('乘坐氢能交通')"
-        @touchend="removeFocus('乘坐氢能交通')"
-        @touchcancel="removeFocus('乘坐氢能交通')"
-        :class="['clickView1', onFocusView == '乘坐氢能交通' ? 'focused' : '']"
-        src="/static/czqnjt.png"
-        mode="widthFix"
-      ></image>
-      <image
-        @touchstart="onFocus('发电步道发电')"
-        @touchend="removeFocus('发电步道发电')"
-        @touchcancel="removeFocus('发电步道发电')"
-        :class="['clickView2', onFocusView == '发电步道发电' ? 'focused' : '']"
-        src="/static/fdbdfd.png"
-        mode="widthFix"
-      ></image>
-      <image
-        @touchstart="onFocus('喝海露纯净水')"
-        @touchend="removeFocus('喝海露纯净水')"
-        @touchcancel="removeFocus('喝海露纯净水')"
-        :class="['clickView3', onFocusView == '喝海露纯净水' ? 'focused' : '']"
-        src="/static/hhlcjs.png"
-        mode="widthFix"
-      ></image>
-      <image
-        @touchstart="onFocus('体验零碳单车')"
-        @touchend="removeFocus('体验零碳单车')"
-        @touchcancel="removeFocus('体验零碳单车')"
-        :class="['clickView4', onFocusView == '体验零碳单车' ? 'focused' : '']"
-        src="/static/tyltdc.png"
-        mode="widthFix"
-      ></image>
-      <image
-        @touchstart="onFocus('零碳小屋')"
-        @touchend="removeFocus('零碳小屋')"
-        @touchcancel="removeFocus('零碳小屋')"
-        :class="['clickView5', onFocusView == '零碳小屋' ? 'focused' : '']"
-        src="/static/ltxw.png"
-        mode="widthFix"
-      ></image>
+      <image class="map-image" src="/static/homePage.png" mode="widthFix"></image>
+      <image 
+        v-for="(item, index) in mapPoints" 
+        :key="item.name"
+        @touchstart="onFocus(item.name)" 
+        @touchend="removeFocus(item.name)" 
+        @touchcancel="removeFocus(item.name)"
+        :class="['clickView' + (index + 1), onFocusView === item.name ? 'focused' : '']" 
+        :src="item.src" 
+        mode="widthFix">
+      </image>
     </view>
     <view class="page-content-menu">
       <view class="page-content-menu-top">
-        <view
-          @click="navigatorTo('每日任务')"
-          class="page-content-menu-top-afterBoard"
-          >每日任务</view
-        >
+        <view @click="navigatorTo('每日任务')" class="page-content-menu-top-afterBoard">每日任务</view>
         <view @click="navigatorTo('场景切换')">场景切换</view>
       </view>
       <view class="page-content-menu-bottom">
-        <view
-          @click="navigatorTo('个人中心')"
-          class="page-content-menu-top-afterBoard"
-          >个人中心</view
-        >
-        <view
-          @click="navigatorTo('我的勋章')"
-          class="page-content-menu-top-afterBoard"
-          >我的勋章</view
-        >
-        <view
-          @click="navigatorTo('积分规则')"
-          class="page-content-menu-top-afterBoard"
-          >积分规则</view
-        >
+        <view @click="navigatorTo('个人中心')" class="page-content-menu-top-afterBoard">个人中心</view>
+        <view @click="navigatorTo('我的勋章')" class="page-content-menu-top-afterBoard">我的勋章</view>
+        <view @click="navigatorTo('积分规则')" class="page-content-menu-top-afterBoard">积分规则</view>
         <view @click="navigatorTo('资讯中心')">资讯中心</view>
       </view>
     </view>
-    <van-popup
-      :show="popupVisible"
-      closeable
-      round
-      position="bottom"
-      custom-style="height: 80%; overflow:visible;border-radius: 40rpx 40rpx 0rpx 0rpx;"
-      @close="closePopup"
-    >
+    <van-popup :show="popupVisible" closeable round position="bottom"
+      custom-style="height: 80%; overflow:visible;border-radius: 40rpx 40rpx 0rpx 0rpx;" @close="closePopup">
       <view class="popup-content">
         <view class="popup-title">场景切换</view>
         <view class="popup-scene">
@@ -124,11 +56,7 @@
     </van-popup>
 
     <!-- 签到弹窗组件 -->
-    <SignInOverlay
-      v-model:show="showSignInOverlay"
-      @close="handleCloseSignIn"
-      @sign-in="handleSignIn"
-    />
+    <SignInOverlay v-model:show="showSignInOverlay" @close="handleCloseSignIn" @sign-in="handleSignIn" />
     <!-- 模态弹窗 -->
     <van-popup ref="popupRef" position="bottom" round :show="false">
       <view> 获取您的昵称和头像 </view>
@@ -137,8 +65,7 @@
         头像
         <image class="avatar" src="/static/avatar.png" />
       </view>
-      <view
-        >昵称
+      <view>昵称
         <input type="nickname" class="weui-input" placeholder="请输入昵称" />
       </view>
     </van-popup>
@@ -161,6 +88,15 @@ let ratio = ref(0);
 // 控制签到弹窗显示
 const showSignInOverlay = ref(false);
 const popupVisible = ref(false);
+
+// 地图上的点位数据
+const mapPoints = ref([
+  { name: '乘坐氢能交通', src: '/static/czqnjt.png' },
+  { name: '发电步道发电', src: '/static/fdbdfd.png' },
+  { name: '喝海露纯净水', src: '/static/hhlcjs.png' },
+  { name: '体验零碳单车', src: '/static/tyltdc.png' },
+  { name: '零碳小屋', src: '/static/ltxw.png' }
+]);
 
 // 页面加载时显示签到弹窗
 onMounted(() => {
@@ -303,49 +239,65 @@ const closePopup = () => {
     .map-image {
       width: 100%;
     }
+
     .focused {
-      transform: scale(1.1); /* 通过缩放实现放大 */
+      transform: scale(1.1);
+      /* 通过缩放实现放大 */
     }
 
     .clickView1 {
+      transition: transform 0.2s ease;
+      /* 使用transform代替width修改 */
+      will-change: transform;
+      /* 预声明变化属性优化性能 */
       position: absolute;
       top: 308rpx;
       right: 106rpx;
       width: 144rpx;
-      transition: transform 0.2s ease; /* 使用transform代替width修改 */
-      will-change: transform; /* 预声明变化属性优化性能 */
     }
+
     .clickView2 {
+      transition: transform 0.2s ease;
+      /* 使用transform代替width修改 */
+      will-change: transform;
+      /* 预声明变化属性优化性能 */
       position: absolute;
       top: 362rpx;
       right: 282rpx;
       width: 144rpx;
-      transition: transform 0.2s ease; /* 使用transform代替width修改 */
-      will-change: transform; /* 预声明变化属性优化性能 */
     }
+
     .clickView3 {
+      transition: transform 0.2s ease;
+      /* 使用transform代替width修改 */
+      will-change: transform;
+      /* 预声明变化属性优化性能 */
       position: absolute;
       width: 150rpx;
       top: 430rpx;
       right: 426rpx;
-      transition: transform 0.2s ease; /* 使用transform代替width修改 */
-      will-change: transform; /* 预声明变化属性优化性能 */
     }
+
     .clickView4 {
+      transition: transform 0.2s ease;
+      /* 使用transform代替width修改 */
+      will-change: transform;
+      /* 预声明变化属性优化性能 */
       position: absolute;
       width: 150rpx;
       top: 590rpx;
       right: 368rpx;
-      transition: transform 0.2s ease; /* 使用transform代替width修改 */
-      will-change: transform; /* 预声明变化属性优化性能 */
     }
+
     .clickView5 {
+      transition: transform 0.2s ease;
+      /* 使用transform代替width修改 */
+      will-change: transform;
+      /* 预声明变化属性优化性能 */
       position: absolute;
       width: 110rpx;
       top: 700rpx;
       right: 270rpx;
-      transition: transform 0.2s ease; /* 使用transform代替width修改 */
-      will-change: transform; /* 预声明变化属性优化性能 */
     }
   }
 
@@ -417,13 +369,11 @@ const closePopup = () => {
   line-height: 72rpx;
   font-size: 32rpx;
   height: 72rpx;
-  background: linear-gradient(
-    139deg,
-    #fd8328 0%,
-    #ffa641 29%,
-    #fba442 70%,
-    #f39033 100%
-  );
+  background: linear-gradient(139deg,
+      #fd8328 0%,
+      #ffa641 29%,
+      #fba442 70%,
+      #f39033 100%);
   border-radius: 98rpx 0rpx 0rpx 98rpx;
 }
 
@@ -487,13 +437,11 @@ const closePopup = () => {
   width: 100%;
   height: 100%;
   position: relative;
-  background: linear-gradient(
-    180deg,
-    #93dea6 0%,
-    #d8eede 14%,
-    #f4f5f4 22%,
-    #f5f5f5 100%
-  );
+  background: linear-gradient(180deg,
+      #93dea6 0%,
+      #d8eede 14%,
+      #f4f5f4 22%,
+      #f5f5f5 100%);
   border-radius: 40rpx 40rpx 0rpx 0rpx;
   box-sizing: border-box;
 }
