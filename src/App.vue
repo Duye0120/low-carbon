@@ -13,7 +13,6 @@ const checkLoginStatus = () => {
     });
   }
 };
-
 // // 在应用启动或页面加载时调用
 // onLaunch(() => {
 // });

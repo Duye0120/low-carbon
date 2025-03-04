@@ -55,7 +55,7 @@
         </view>
       </scroll-view>
     </view>
-    <button class="share-button" type="button" plain>
+    <button class="share-button" type="button" open-type="share" plain>
       <image
         src="../static/share.png"
         mode="widthFix"
@@ -68,6 +68,12 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+const onShareAppMessage = () => {
+  return {
+    title: "分享标题",
+    path: "/pages/views/index",
+  };
+};
 </script>
 
 <style scoped lang="scss">
