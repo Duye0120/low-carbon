@@ -49,7 +49,8 @@
                     <button @click="closePopup" class="refuseDisabled" type="button" plain>
                         拒绝
                     </button>
-                    <button @click="handleLogin" :class="formActive ? 'allowd' : 'allowDisabled'" class="submit-button" type="button" plain>
+                    <button @click="handleLogin" :class="formActive ? 'allowd' : 'allowDisabled'" class="submit-button"
+                        type="button" plain>
                         允许
                     </button>
                 </view>
@@ -105,8 +106,8 @@ const inputChange = (e: any) => {
 }
 
 const onChooseAvatar = (e: any) => {
-  console.log(e);
-  avatarUrl.value = e.detail.avatarUrl;
+    console.log(e);
+    avatarUrl.value = e.detail.avatarUrl;
 };
 
 // 处理登录
@@ -134,18 +135,18 @@ const handleLogin = () => {
             uni.reLaunch({
                 url: '/pages/index'
             });
-            // // 获取用户信息
-            // uni.getUserProfile({
-            //     desc: '用于完善会员资料',
-            //     success: function (infoRes) {
-            //         // 保存用户信息
-            //         uni.setStorageSync('userInfo', infoRes.userInfo);
-            //         uni.setStorageSync('token', 'mock-token-' + Date.now()); // 模拟token
+// // 获取用户信息
+// uni.getUserProfile({
+//     desc: '用于完善会员资料',
+//     success: function (infoRes) {
+//         // 保存用户信息
+//         uni.setStorageSync('userInfo', infoRes.userInfo);
+//         uni.setStorageSync('token', 'mock-token-' + Date.now()); // 模拟token
 
-            //         // 跳转到首页
-            //         uni.reLaunch({
-            //             url: '/pages/index'
-            //         });
+//         // 跳转到首页
+//         uni.reLaunch({
+//             url: '/pages/index'
+//         });
             //     },
             //     fail: function () {
             //         uni.showToast({
@@ -235,9 +236,7 @@ const handleLogin = () => {
         .checkbox-label {
             display: flex;
             align-items: center;
-        }
-
-        .link {
+        }.link {
             color: #52C41A;
             margin: 0 4rpx;
         }
