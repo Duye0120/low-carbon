@@ -1,360 +1,410 @@
 <template>
-    <view class="login-container">
-        <view class="logo">
-            <image src="/static/login-avatar.png" mode="aspectFit"></image>
-        </view>
-        <view class="title">零碳小精灵</view>
-
-
-        <view class="agreement">
-            <checkbox-group @change="handleAgreementChange">
-                <label class="checkbox-label">
-                    <checkbox value="agree" :checked="isAgreed" color="#07c160" style="transform: scale(0.7);" />
-                    <text>我已阅读并同意</text>
-                    <text class="link" @click="showTerms">《用户协议》</text>
-                    <text>和</text>
-                    <text class="link" @click="showPrivacy">《隐私政策》</text>
-                </label>
-            </checkbox-group>
-        </view>
-        <button class="login-btn" :class="{ 'login-btn-disabled': !isAgreed }" type="button" @click="openPopup"
-            :disabled="!isAgreed">
-            进入零碳小精灵
-        </button>
-
-
-        <van-popup :show="popupVisible" round position="bottom" custom-style="height: 35%;padding: 30rpx"
-            @close="closePopup">
-            <view class="popup-content">
-                <view class="popup-title">
-                    <image mode="widthFix" src="/static/login-avatar.png" />
-                    <view class="popup-title-text">零碳小精灵&nbsp;申请</view>
-                </view>
-                <view class="popup-describe">
-                    <view class="popup-describe-top">获取您的昵称和头线</view>
-                    <view class="popup-describe-bottom">在"我的"页面中展示昵称和头线</view>
-                </view>
-                <view class="popup-line">
-                    <view class="popup-line-label">头像</view>
-                    <button @chooseavatar="onChooseAvatar" class="avatar-wrapper" open-type="chooseAvatar">
-                        <image style="width: 82rpx;" mode="widthFix"
-                            :src="avatarUrl ? avatarUrl : '/static/avatar.png'" />
-                    </button>
-                </view>
-                <view class="popup-line">
-                    <view class="popup-line-label">昵称</view>
-                    <input @input="inputChange" type="nickname" class="weui-input" placeholder="请输入昵称" />
-                </view>
-                <view class="popup-buttonLine">
-                    <button @click="closePopup" class="refuseDisabled" type="button" plain>
-                        拒绝
-                    </button>
-                    <button @click="handleLogin" :class="formActive ? 'allowd' : 'allowDisabled'" class="submit-button"
-                        type="button" plain>
-                        允许
-                    </button>
-                </view>
-            </view>
-        </van-popup>
+  <view class="login-container">
+    <view class="logo">
+      <image src="/static/login-avatar.png" mode="aspectFit"></image>
     </view>
+    <view class="title">零碳小精灵</view>
+
+    <view class="agreement">
+      <checkbox-group @change="handleAgreementChange">
+        <label class="checkbox-label">
+          <checkbox
+            value="agree"
+            :checked="isAgreed"
+            color="#07c160"
+            style="transform: scale(0.7)"
+          />
+          <text>我已阅读并同意</text>
+          <text class="link" @click="showTerms">《用户协议》</text>
+          <text>和</text>
+          <text class="link" @click="showPrivacy">《隐私政策》</text>
+        </label>
+      </checkbox-group>
+    </view>
+    <button
+      class="login-btn"
+      :class="{ 'login-btn-disabled': !isAgreed }"
+      type="button"
+      @click="openPopup"
+      :disabled="!isAgreed"
+    >
+      进入零碳小精灵
+    </button>
+
+    <van-popup
+      :show="popupVisible"
+      round
+      position="bottom"
+      custom-style="height: 35%;padding: 30rpx"
+      @close="closePopup"
+    >
+      <view class="popup-content">
+        <view class="popup-title">
+          <image mode="widthFix" src="/static/login-avatar.png" />
+          <view class="popup-title-text">零碳小精灵&nbsp;申请</view>
+        </view>
+        <view class="popup-describe">
+          <view class="popup-describe-top">获取您的昵称和头线</view>
+          <view class="popup-describe-bottom"
+            >在"我的"页面中展示昵称和头线</view
+          >
+        </view>
+        <view class="popup-line">
+          <view class="popup-line-label">头像</view>
+          <button
+            @chooseavatar="onChooseAvatar"
+            class="avatar-wrapper"
+            open-type="chooseAvatar"
+          >
+            <image
+              style="width: 82rpx"
+              mode="widthFix"
+              :src="avatarURL ? avatarURL : '/static/avatar.png'"
+            />
+          </button>
+        </view>
+        <view class="popup-line">
+          <view class="popup-line-label">昵称</view>
+          <input
+            @input="inputChange"
+            type="nickname"
+            class="weui-input"
+            placeholder="请输入昵称"
+          />
+        </view>
+        <view class="popup-buttonLine">
+          <button
+            @click="closePopup"
+            class="refuseDisabled"
+            type="button"
+            plain
+          >
+            拒绝
+          </button>
+          <button
+            :loading="loading"
+            @click="handleLogin"
+            :class="formActive ? 'allowd' : 'allowDisabled'"
+            class="submit-button"
+            type="button"
+            plain
+          >
+            允许
+          </button>
+        </view>
+      </view>
+    </van-popup>
+  </view>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-let avatarUrl = ref("")
+import { onLoad } from "@dcloudio/uni-app";
+import { getOpenId, getToken } from "@/api/account";
+import config from "@/config.ts";
+import { ref } from "vue";
+let avatarURL = ref("");
 const loading = ref(false);
 const isAgreed = ref(false);
 const popupVisible = ref(false);
-let formActive = ref(false)
-let nickName = ref("")
+let formActive = ref(false);
+let nickName = ref("");
+let openid = ref("");
 
 const closePopup = () => {
-    popupVisible.value = false;
-}
+  popupVisible.value = false;
+};
 
 const openPopup = () => {
-    popupVisible.value = true;
-}
+  popupVisible.value = true;
+};
 
 // 处理协议同意状态变更
 const handleAgreementChange = (e: any) => {
-    isAgreed.value = e.detail.value.length > 0;
+  isAgreed.value = e.detail.value.length > 0;
 };
 
 // 显示用户协议
 const showTerms = () => {
-    uni.showModal({
-        title: '用户协议',
-        content: '这是用户协议内容...',
-        showCancel: false
-    });
+  uni.showModal({
+    title: "用户协议",
+    content: "这是用户协议内容...",
+    showCancel: false,
+  });
 };
 
 // 显示隐私政策
 const showPrivacy = () => {
-    uni.showModal({
-        title: '隐私政策',
-        content: '这是隐私政策内容...',
-        showCancel: false
-    });
+  uni.showModal({
+    title: "隐私政策",
+    content: "这是隐私政策内容...",
+    showCancel: false,
+  });
 };
 
 const inputChange = (e: any) => {
-    console.log(e)
-    formActive.value = e.detail.value.length > 0
-    nickName.value = e.detail.value
-}
+  console.log(e);
+  formActive.value = e.detail.value.length > 0;
+  nickName.value = e.detail.value;
+};
 
 const onChooseAvatar = (e: any) => {
-    console.log(e);
-    avatarUrl.value = e.detail.avatarUrl;
+  console.log(e);
+  const { avatarUrl } = e.detail;
+  avatarURL.value = avatarUrl;
+  let fileName = avatarUrl.split("/").pop();
+  uni.uploadFile({
+    url: config.baseUrl + "/file/upload", // 上传地址
+    name: "file",
+    filePath: avatarUrl,
+    formData: {
+      code: "sys",
+      menu: "小程序",
+    },
+    success: (res: any) => {
+      console.log(res);
+      if (res.statusCode === 200) {
+        let data = JSON.parse(res.data);
+        let url = data.data.url.replace(/[\\]/g, "/");
+        avatarURL.value = config.fileUrl + url;
+      } else {
+      }
+    },
+    fail: () => {},
+  });
 };
 
 // 处理登录
-const handleLogin = () => {
-    if (!formActive.value) return
-    if (!isAgreed.value) {
-        uni.showToast({
-            title: '请先同意用户协议和隐私政策',
-            icon: 'none'
-        });
-        return;
-    }
-
-    loading.value = true;
-
-    // 使用微信登录
-    uni.login({
-        provider: 'weixin',
-        success: function (loginRes) {
-            console.log('登录成功', loginRes);
-            uni.setStorageSync('info', {
-                avatarUrl: avatarUrl.value,
-                nickName: nickName.value
-            })
-            uni.reLaunch({
-                url: '/pages/index'
-            });
-// // 获取用户信息
-// uni.getUserProfile({
-//     desc: '用于完善会员资料',
-//     success: function (infoRes) {
-//         // 保存用户信息
-//         uni.setStorageSync('userInfo', infoRes.userInfo);
-//         uni.setStorageSync('token', 'mock-token-' + Date.now()); // 模拟token
-
-//         // 跳转到首页
-//         uni.reLaunch({
-//             url: '/pages/index'
-//         });
-            //     },
-            //     fail: function () {
-            //         uni.showToast({
-            //             title: '获取用户信息失败',
-            //             icon: 'none'
-            //         });
-            //         loading.value = false;
-            //     }
-            // });
-        },
-        fail: function () {
-            uni.showToast({
-                title: '登录失败，请重试',
-                icon: 'none'
-            });
-            loading.value = false;
-        }
+const handleLogin = async () => {
+  if (!formActive.value) return;
+  if (!isAgreed.value) {
+    uni.showToast({
+      title: "请先同意用户协议和隐私政策",
+      icon: "none",
     });
+    return;
+  }
+  // 使用微信登录
+  loading.value = true;
+  let res = await getToken({
+    headImg: avatarURL.value ? avatarURL.value : "",
+    userName: nickName.value,
+    wxId: openid.value,
+  });
+  console.log(res);
+  loading.value = false;
+  if (res) {
+    uni.setStorageSync("authorization", res);
+    uni.navigateTo({ url: "/pages/index" });
+  }
 };
+onLoad(() => {
+  uni.login({
+    provider: "weixin",
+    success: function (loginRes) {
+      getOpenId({
+        js_code: loginRes.code,
+      }).then((res) => {
+        openid.value = res.openid;
+        uni.setStorageSync("uuid", res.openid);
+      });
+    },
+    fail: function () {
+      uni.showToast({
+        title: "登录失败，请重试",
+        icon: "none",
+      });
+    },
+  });
+});
 </script>
 
 <style lang="scss" scoped>
 .login-container {
-    padding: 60rpx;
+  padding: 60rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 120rpx);
+  background-color: #f8f8f8;
+
+  .logo {
+    width: 180rpx;
+    height: 180rpx;
+    margin-bottom: 40rpx;
+
+    image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .title {
+    font-family: PingFang-SC, PingFang-SC;
+    font-weight: bold;
+    font-size: 48rpx;
+    margin-bottom: 20rpx;
+    color: #000;
+    padding-bottom: 380rpx;
+  }
+
+  .subtitle {
+    font-size: 28rpx;
+    color: #666;
+    margin-bottom: 80rpx;
+  }
+
+  .login-btn {
+    width: 80%;
+    height: 90rpx;
+    border-radius: 8rpx;
+    font-size: 32rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 500;
+    margin-top: 40rpx;
+    background-color: #07c160;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: calc(100% - 120rpx);
-    background-color: #f8f8f8;
+    align-items: center;
+    color: #fff;
+  }
 
-    .logo {
-        width: 180rpx;
-        height: 180rpx;
-        margin-bottom: 40rpx;
+  .login-btn-disabled {
+    background-color: #ccc;
+    color: #fff;
+  }
 
-        image {
-            width: 100%;
-            height: 100%;
-        }
+  .agreement {
+    font-size: 22rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+
+    color: #999;
+    display: flex;
+    align-items: center;
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
     }
-
-    .title {
-        font-family: PingFang-SC, PingFang-SC;
-        font-weight: bold;
-        font-size: 48rpx;
-        margin-bottom: 20rpx;
-        color: #000;
-        padding-bottom: 380rpx;
+    .link {
+      color: #52c41a;
+      margin: 0 4rpx;
     }
-
-    .subtitle {
-        font-size: 28rpx;
-        color: #666;
-        margin-bottom: 80rpx;
-    }
-
-    .login-btn {
-        width: 80%;
-        height: 90rpx;
-        border-radius: 8rpx;
-        font-size: 32rpx;
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 500;
-        margin-top: 40rpx;
-        background-color: #07c160;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-    }
-
-    .login-btn-disabled {
-        background-color: #ccc;
-        color: #fff;
-    }
-
-    .agreement {
-        font-size: 22rpx;
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 400;
-
-        color: #999;
-        display: flex;
-        align-items: center;
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-        }.link {
-            color: #52C41A;
-            margin: 0 4rpx;
-        }
-    }
+  }
 }
 
 .popup-content {
+  .popup-title {
+    display: flex;
+    align-items: center;
 
-    .popup-title {
-        display: flex;
-        align-items: center;
-
-        >image {
-            width: 40rpx;
-            margin-right: 16rpx;
-        }
-
-        &-text {
-            font-family: PingFangSC, PingFang SC;
-            font-weight: 500;
-            font-size: 28rpx;
-            color: #000000;
-        }
+    > image {
+      width: 40rpx;
+      margin-right: 16rpx;
     }
 
-    .popup-describe {
-        margin-top: 56rpx;
+    &-text {
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 500;
+      font-size: 28rpx;
+      color: #000000;
+    }
+  }
 
-        &-top {
-            font-family: PingFangSC, PingFang SC;
-            font-weight: 500;
-            font-size: 32rpx;
-            color: #000000;
-        }
+  .popup-describe {
+    margin-top: 56rpx;
 
-        &-bottom {
-            margin-top: 6rpx;
-            font-family: PingFangSC, PingFang SC;
-            font-weight: 400;
-            font-size: 22rpx;
-            color: rgba(0, 0, 0, 0.45);
-        }
+    &-top {
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 500;
+      font-size: 32rpx;
+      color: #000000;
     }
 
-    .popup-line {
-        display: flex;
-        align-items: center;
-        margin-top: 36rpx;
+    &-bottom {
+      margin-top: 6rpx;
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 400;
+      font-size: 22rpx;
+      color: rgba(0, 0, 0, 0.45);
+    }
+  }
 
-        &-label {
-            font-family: PingFangSC, PingFang SC;
-            font-weight: 400;
-            font-size: 28rpx;
-            color: rgba(0, 0, 0, 0.85);
-            margin-right: 60rpx;
-        }
+  .popup-line {
+    display: flex;
+    align-items: center;
+    margin-top: 36rpx;
 
-        .avatar-wrapper {
-            display: flex;
-            align-items: center;
-            background: none;
-            border: none;
-            color: inherit;
-            font: inherit;
-            padding: 0;
-            margin: 0;
-
-            &::after {
-                border: none;
-            }
-        }
+    &-label {
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 400;
+      font-size: 28rpx;
+      color: rgba(0, 0, 0, 0.85);
+      margin-right: 60rpx;
     }
 
-    .popup-buttonLine {
-        display: flex;
-        margin-top: 28rpx;
+    .avatar-wrapper {
+      display: flex;
+      align-items: center;
+      background: none;
+      border: none;
+      color: inherit;
+      font: inherit;
+      padding: 0;
+      margin: 0;
 
-        .refuseDisabled {
-            border: none;
-            width: 238rpx;
-            height: 80rpx;
-            background: #F2F2F2;
-            border-radius: 4rpx;
-            font-family: PingFangSC, PingFang SC;
-            font-weight: 400;
-            font-size: 28rpx;
-            color: #1FBD6E;
-            line-height: 80rpx;
-            text-align: center;
-        }
-
-        .allowDisabled {
-            border: none;
-            width: 238rpx;
-            height: 80rpx;
-            background: #84CAA6;
-            border-radius: 4rpx;
-            font-family: PingFangSC, PingFang SC;
-            font-weight: 400;
-            font-size: 28rpx;
-            color: #FFFFFF;
-            line-height: 80rpx;
-            text-align: center;
-        }
-
-        .allowd {
-            border: none;
-            width: 238rpx;
-            height: 80rpx;
-            background: #03C15F;
-            border-radius: 4rpx;
-            font-family: PingFangSC, PingFang SC;
-            font-weight: 400;
-            font-size: 28rpx;
-            color: #FFFFFF;
-            line-height: 80rpx;
-            text-align: center;
-        }
+      &::after {
+        border: none;
+      }
     }
+  }
+
+  .popup-buttonLine {
+    display: flex;
+    margin-top: 28rpx;
+
+    .refuseDisabled {
+      border: none;
+      width: 238rpx;
+      height: 80rpx;
+      background: #f2f2f2;
+      border-radius: 4rpx;
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 400;
+      font-size: 28rpx;
+      color: #1fbd6e;
+      line-height: 80rpx;
+      text-align: center;
+    }
+
+    .allowDisabled {
+      border: none;
+      width: 238rpx;
+      height: 80rpx;
+      background: #84caa6;
+      border-radius: 4rpx;
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 400;
+      font-size: 28rpx;
+      color: #ffffff;
+      line-height: 80rpx;
+      text-align: center;
+    }
+
+    .allowd {
+      border: none;
+      width: 238rpx;
+      height: 80rpx;
+      background: #03c15f;
+      border-radius: 4rpx;
+      font-family: PingFangSC, PingFang SC;
+      font-weight: 400;
+      font-size: 28rpx;
+      color: #ffffff;
+      line-height: 80rpx;
+      text-align: center;
+    }
+  }
 }
 </style>

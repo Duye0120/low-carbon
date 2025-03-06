@@ -80,6 +80,14 @@
           "style": {
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "iamge-text",
+          "style": {
+            "navigationBarTitleText": "图文详情",
+            "navigationBarTextStyle": "black",
+            "navigationBarBackgroundColor": "#F1F8FF"
+          }
         }
       ]
     },

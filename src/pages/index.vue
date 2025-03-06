@@ -2,51 +2,88 @@
   <view class="page-content">
     <view class="user-info">
       <view class="avatar-wrapper">
-        <image class="avatar" :src="info
-          ? info.avatarUrl
-            ? info.avatarUrl
-            : '/static/avatar.png'
-          : '/static/avatar.png'
-          " mode="aspectFill"></image>
+        <image
+          class="avatar"
+          :src="
+            info
+              ? info.headImg
+                ? info.headImg
+                : '/static/avatar.png'
+              : '/static/avatar.png'
+          "
+          mode="aspectFill"
+        ></image>
       </view>
       <view class="user-details">
-        <view class="username">{{ info ? info.nickName : "游客" }}</view>
+        <view class="username">{{ info ? info.userName : "游客" }}</view>
         <view class="points">积分 304</view>
       </view>
     </view>
-    <image class="ball" :style="'left:' + moveX + 'px;top:' + moveY + 'px'" @touchstart="drag_start"
-      @touchmove.stop="drag_hmove" src="/static/generate-report.png" mode="aspectFit" @tap="add"></image>
+    <image
+      class="ball"
+      :style="'left:' + moveX + 'px;top:' + moveY + 'px'"
+      @touchstart="drag_start"
+      @touchmove.stop="drag_hmove"
+      src="/static/generate-report.png"
+      mode="aspectFit"
+      @tap="add"
+    ></image>
     <view class="start-journey">
       开始旅程
       <van-icon name="arrow" />
     </view>
     <view class="page-content-map">
-      <image class="map-image" src="/static/homePage.png" mode="widthFix"></image>
-      <image 
-        v-for="(item, index) in mapPoints" 
+      <image
+        class="map-image"
+        src="/static/homePage.png"
+        mode="widthFix"
+      ></image>
+      <image
+        v-for="(item, index) in mapPoints"
         :key="item.name"
-        @touchstart="onFocus(item.name)" 
-        @touchend="removeFocus(item.name)" 
-        @touchcancel="removeFocus(item.name)"
-        :class="['clickView' + (index + 1), onFocusView === item.name ? 'focused' : '']" 
-        :src="item.src" 
-        mode="widthFix">
+        @touchstart="onFocus(item)"
+        @touchend="removeFocus(item)"
+        @touchcancel="removeFocus(item)"
+        :class="[
+          'clickView' + (index + 1),
+          onFocusView === item.name ? 'focused' : '',
+        ]"
+        :src="item.src"
+        mode="widthFix"
+      >
       </image>
     </view>
     <view class="page-content-menu">
       <view class="page-content-menu-top">
-        <view @click="navigatorTo('每日任务')" class="page-content-menu-top-afterBoard">每日任务</view>
+        <view
+          @click="navigatorTo('每日任务')"
+          class="page-content-menu-top-afterBoard"
+          >每日任务</view
+        >
         <view @click="navigatorTo('场景切换')">场景切换</view>
       </view>
       <view class="page-content-menu-bottom">
-        <view @click="navigatorTo('个人中心')" class="page-content-menu-top-afterBoard">个人中心</view>
-        <view @click="navigatorTo('我的勋章')" class="page-content-menu-top-afterBoard">我的勋章</view>
-        <view @click="navigatorTo('积分规则')" class="page-content-menu-top-afterBoard">积分规则</view>
-        <view @click="navigatorTo('资讯中心')">资讯中心</view>
+        <view
+          @click="navigatorTo('个人中心')"
+          class="page-content-menu-top-afterBoard"
+          >个人中心</view
+        >
+        <view
+          @click="navigatorTo('我的勋章')"
+          class="page-content-menu-top-afterBoard"
+          >我的勋章</view
+        >
+        <view @click="navigatorTo('积分规则')">积分规则</view>
       </view>
     </view>
-    <van-popup :show="popupVisible" closeable round position="bottom"
-      custom-style="height: 80%; overflow:visible;border-radius: 40rpx 40rpx 0rpx 0rpx;" @close="closePopup">
+    <van-popup
+      :show="popupVisible"
+      closeable
+      round
+      position="bottom"
+      custom-style="height: 80%; overflow:visible;border-radius: 40rpx 40rpx 0rpx 0rpx;"
+      @close="closePopup"
+    >
       <view class="popup-content">
         <view class="popup-title">场景切换</view>
         <view class="popup-scene">
@@ -56,7 +93,11 @@
     </van-popup>
 
     <!-- 签到弹窗组件 -->
-    <SignInOverlay v-model:show="showSignInOverlay" @close="handleCloseSignIn" @sign-in="handleSignIn" />
+    <SignInOverlay
+      v-model:show="showSignInOverlay"
+      @close="handleCloseSignIn"
+      @sign-in="handleSignIn"
+    />
     <!-- 模态弹窗 -->
     <van-popup ref="popupRef" position="bottom" round :show="false">
       <view> 获取您的昵称和头像 </view>
@@ -65,7 +106,8 @@
         头像
         <image class="avatar" src="/static/avatar.png" />
       </view>
-      <view>昵称
+      <view
+        >昵称
         <input type="nickname" class="weui-input" placeholder="请输入昵称" />
       </view>
     </van-popup>
@@ -77,6 +119,9 @@ import { onShow } from "@dcloudio/uni-app";
 import { ref, onMounted, onUnmounted } from "vue";
 import SignInOverlay from "@/components/SignInOverlay.vue";
 import SceneContent from "@/components/SceneContent.vue";
+import { getUserInfo } from "@/api/account";
+import { pageInfoPoint } from "./api/index";
+import type { PointItem } from "./api/index";
 
 let onFocusView = ref("");
 let moveX = ref(352);
@@ -91,11 +136,11 @@ const popupVisible = ref(false);
 
 // 地图上的点位数据
 const mapPoints = ref([
-  { name: '乘坐氢能交通', src: '/static/czqnjt.png' },
-  { name: '发电步道发电', src: '/static/fdbdfd.png' },
-  { name: '喝海露纯净水', src: '/static/hhlcjs.png' },
-  { name: '体验零碳单车', src: '/static/tyltdc.png' },
-  { name: '零碳小屋', src: '/static/ltxw.png' }
+  { name: "乘坐氢能交通", src: "/static/czqnjt.png", id: "" },
+  { name: "发电步道发电", src: "/static/fdbdfd.png", id: "" },
+  { name: "喝海露纯净水", src: "/static/hhlcjs.png", id: "" },
+  { name: "体验零碳单车", src: "/static/tyltdc.png", id: "" },
+  { name: "零碳小屋", src: "/static/ltxw.png", id: "" },
 ]);
 
 // 页面加载时显示签到弹窗
@@ -162,14 +207,13 @@ const navigatorTo = (item: string) => {
   }
 };
 let info = ref<any>(null);
-const onFocus = (item: string) => {
+const onFocus = (item: { name: string; id: string }) => {
   console.log(item, "onFocus");
-  onFocusView.value = item;
+  onFocusView.value = item.name;
 };
-const removeFocus = (item: string) => {
-  console.log(item, "removeFocus");
+const removeFocus = (item: { name: string; id: string }) => {
   onFocusView.value = "";
-  uni.navigateTo({ url: `/main/index?tab=task` });
+  uni.navigateTo({ url: `/main/index?tab=task&id=${item.id}` });
 };
 const drag_start = (e: any) => {
   start.value[0] = e.touches[0].clientX - e.target.offsetLeft;
@@ -202,12 +246,36 @@ const rpxToPx = (rpxValue: number) => {
   let screenWidth = uni.getSystemInfoSync().windowWidth;
   return (screenWidth / 750) * rpxValue;
 };
-onShow(() => {
-  info.value = uni.getStorageSync("info");
-  if (!info.value) {
-    uni.navigateTo({ url: "/pages/login" });
-    return;
+const getPointList = async () => {
+  try {
+    let res = await pageInfoPoint({
+      pageNum: 1,
+      pageSize: 12,
+    });
+    console.log(res);
+    mapPoints.value.forEach((item) => {
+      item.id =
+        res.list.find((i: PointItem) => i.pointName === item.name)?.id || "";
+    });
+    console.log(mapPoints.value);
+  } catch (error) {}
+};
+const getUserInfoFunc = async () => {
+  try {
+    console.log('uuid', uni.getStorageSync("uuid"));
+    let res = await getUserInfo();
+    console.log({ res123123: res });
+    info.value = res;
+    uni.setStorageSync("info", info.value);
+  } catch (error) {}
+};
+onShow(async () => {
+  if (uni.getStorageSync("info")) {
+    info.value = uni.getStorageSync("info");
+  } else {
+    getUserInfoFunc();
   }
+  getPointList();
   moveX.value = rpxToPx(620);
   moveY.value = rpxToPx(260);
   const { windowWidth, windowHeight } = uni.getSystemInfoSync();
@@ -339,7 +407,7 @@ const closePopup = () => {
 
     &-bottom {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       border-bottom: 1px solid rgba(0, 0, 0, 0.45);
       height: 70rpx;
       text-align: center;
@@ -369,11 +437,13 @@ const closePopup = () => {
   line-height: 72rpx;
   font-size: 32rpx;
   height: 72rpx;
-  background: linear-gradient(139deg,
-      #fd8328 0%,
-      #ffa641 29%,
-      #fba442 70%,
-      #f39033 100%);
+  background: linear-gradient(
+    139deg,
+    #fd8328 0%,
+    #ffa641 29%,
+    #fba442 70%,
+    #f39033 100%
+  );
   border-radius: 98rpx 0rpx 0rpx 98rpx;
 }
 
@@ -437,11 +507,13 @@ const closePopup = () => {
   width: 100%;
   height: 100%;
   position: relative;
-  background: linear-gradient(180deg,
-      #93dea6 0%,
-      #d8eede 14%,
-      #f4f5f4 22%,
-      #f5f5f5 100%);
+  background: linear-gradient(
+    180deg,
+    #93dea6 0%,
+    #d8eede 14%,
+    #f4f5f4 22%,
+    #f5f5f5 100%
+  );
   border-radius: 40rpx 40rpx 0rpx 0rpx;
   box-sizing: border-box;
 }

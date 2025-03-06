@@ -6,6 +6,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "allowImportingTsExtensions": true,
     "lib": ["esnext", "dom"],
     "types": ["@dcloudio/types"]
   },

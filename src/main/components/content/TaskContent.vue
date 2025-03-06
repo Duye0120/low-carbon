@@ -68,6 +68,9 @@ const completeTask = (index: number) => {
       // 答题
       break;
     case 'browse':
+      uni.navigateTo({
+        url: '/main/image-text'
+      })
       // 浏览
       break;
   }
