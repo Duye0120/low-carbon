@@ -1,8 +1,8 @@
 <template>
   <view class="page-wrapper">
     <view class="page-header">
-      <image class="avatar" :src="info ? info.avatarUrl ? info.avatarUrl : '/static/avatar.png' : '/static/avatar.png'" mode="widthFix" />
-      <view class="userName">{{ info.nickName }}</view>
+      <image class="avatar" :src="info ? info.headImg : '/static/avatar.png'" mode="widthFix" />
+      <view class="userName">{{ info.userName }}</view>
     </view>
     <view class="page-middle">
       <view class="middle-item" v-for="item in recordList" :key="item.label">
@@ -79,6 +79,7 @@ let list = ref([
 ]);
 let messageAccount = ref(0);
 let info = uni.getStorageSync("info");
+console.log(info);
 const toSomePage = (item: { title: string; route: string }) => {
   uni.navigateTo({
     url: item.route,

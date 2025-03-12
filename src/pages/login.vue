@@ -17,7 +17,7 @@
           <text>我已阅读并同意</text>
           <text class="link" @click="showTerms">《用户协议》</text>
           <text>和</text>
-          <text class="link" @click="showPrivacy">《隐私政策》</text>
+          <text class="link" @click="showTerms">《隐私政策》</text>
         </label>
       </checkbox-group>
     </view>
@@ -51,17 +51,11 @@
         </view>
         <view class="popup-line">
           <view class="popup-line-label">头像</view>
-          <button
-            @chooseavatar="onChooseAvatar"
-            class="avatar-wrapper"
-            open-type="chooseAvatar"
-          >
-            <image
-              style="width: 82rpx"
-              mode="widthFix"
-              :src="avatarURL ? avatarURL : '/static/avatar.png'"
-            />
-          </button>
+          <image
+            style="width: 82rpx"
+            mode="widthFix"
+            :src="avatarURL ? avatarURL : '/static/avatar.png'"
+          />
         </view>
         <view class="popup-line">
           <view class="popup-line-label">昵称</view>
@@ -94,19 +88,35 @@
         </view>
       </view>
     </van-popup>
+    <van-dialog use-slot :show="show" :show-confirm-button="false">
+      <view style="padding: 32rpx">
+        <agreement :index="index" />
+        <view class="dialog-buttonLine">
+          <button @click="closeDialog" type="button" class="cancel" plain>
+            拒绝
+          </button>
+          <button @click="handleAgreement" type="button" class="allowd" plain>
+            {{ index === 0 ? "继续" : "同意" }}
+          </button>
+        </view>
+      </view>
+    </van-dialog>
   </view>
 </template>
 
 <script setup lang="ts">
 import { onLoad } from "@dcloudio/uni-app";
 import { getOpenId, getToken } from "@/api/account";
+import agreement from "./components/agreement.vue";
 import config from "@/config.ts";
 import { ref } from "vue";
+let index = ref(0);
 let avatarURL = ref("");
 const loading = ref(false);
 const isAgreed = ref(false);
 const popupVisible = ref(false);
 let formActive = ref(false);
+let show = ref(false);
 let nickName = ref("");
 let openid = ref("");
 
@@ -119,26 +129,23 @@ const openPopup = () => {
 };
 
 // 处理协议同意状态变更
-const handleAgreementChange = (e: any) => {
-  isAgreed.value = e.detail.value.length > 0;
+const handleAgreementChange = () => {
+  isAgreed.value = false;
+  showTerms();
+};
+
+const closeDialog = () => {
+  show.value = false;
+  isAgreed.value = false;
+  index.value = 0;
 };
 
 // 显示用户协议
 const showTerms = () => {
-  uni.showModal({
-    title: "用户协议",
-    content: "这是用户协议内容...",
-    showCancel: false,
-  });
-};
-
-// 显示隐私政策
-const showPrivacy = () => {
-  uni.showModal({
-    title: "隐私政策",
-    content: "这是隐私政策内容...",
-    showCancel: false,
-  });
+  console.log("showTerms", show.value);
+  index.value = 0;
+  show.value = true;
+  console.log("showTerms", show.value);
 };
 
 const inputChange = (e: any) => {
@@ -147,32 +154,40 @@ const inputChange = (e: any) => {
   nickName.value = e.detail.value;
 };
 
-const onChooseAvatar = (e: any) => {
-  console.log(e);
-  const { avatarUrl } = e.detail;
-  avatarURL.value = avatarUrl;
-  let fileName = avatarUrl.split("/").pop();
-  uni.uploadFile({
-    url: config.baseUrl + "/file/upload", // 上传地址
-    name: "file",
-    filePath: avatarUrl,
-    formData: {
-      code: "sys",
-      menu: "小程序",
-    },
-    success: (res: any) => {
-      console.log(res);
-      if (res.statusCode === 200) {
-        let data = JSON.parse(res.data);
-        let url = data.data.url.replace(/[\\]/g, "/");
-        avatarURL.value = config.fileUrl + url;
-      } else {
-      }
-    },
-    fail: () => {},
-  });
+// const onChooseAvatar = (e: any) => {
+//   console.log(e);
+//   const { avatarUrl } = e.detail;
+//   avatarURL.value = avatarUrl;
+//   let fileName = avatarUrl.split("/").pop();
+//   uni.uploadFile({
+//     url: config.baseUrl + "/file/upload", // 上传地址
+//     name: "file",
+//     filePath: avatarUrl,
+//     formData: {
+//       code: "sys",
+//       menu: "小程序",
+//     },
+//     success: (res: any) => {
+//       console.log(res);
+//       if (res.statusCode === 200) {
+//         let data = JSON.parse(res.data);
+//         let url = data.data.url.replace(/[\\]/g, "/");
+//         avatarURL.value = config.fileUrl + url;
+//       } else {
+//       }
+//     },
+//     fail: () => {},
+//   });
+// };
+const handleAgreement = () => {
+  console.log(index.value);
+  if (index.value === 1) {
+    isAgreed.value = true;
+    show.value = false;
+    return;
+  }
+  index.value++;
 };
-
 // 处理登录
 const handleLogin = async () => {
   if (!formActive.value) return;
@@ -186,7 +201,7 @@ const handleLogin = async () => {
   // 使用微信登录
   loading.value = true;
   let res = await getToken({
-    headImg: avatarURL.value ? avatarURL.value : "",
+    headImg: "/static/avatar.png",
     userName: nickName.value,
     wxId: openid.value,
   });
@@ -359,52 +374,83 @@ onLoad(() => {
       }
     }
   }
+}
+.dialog-buttonLine {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+  margin-top: 60rpx;
+  .allowd {
+    border: none;
+    height: 80rpx;
+    width: 100%;
+    background: #03c15f;
+    border-radius: 8rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 28rpx;
+    color: #ffffff;
+    line-height: 80rpx;
+    text-align: center;
+  }
+  .cancel {
+    border: none;
+    height: 80rpx;
+    width: 100%;
+    background: rgb(227, 242, 221);
+    border-radius: 8rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 28rpx;
+    color: rgb(113, 188, 85);
+    line-height: 80rpx;
+    text-align: center;
+  }
+}
+.popup-buttonLine {
+  display: flex;
+  margin-top: 28rpx;
 
-  .popup-buttonLine {
-    display: flex;
-    margin-top: 28rpx;
+  .refuseDisabled {
+    border: none;
+    width: 238rpx;
+    height: 80rpx;
+    background: #f2f2f2;
+    border-radius: 4rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 28rpx;
+    color: #1fbd6e;
+    line-height: 80rpx;
+    text-align: center;
+  }
 
-    .refuseDisabled {
-      border: none;
-      width: 238rpx;
-      height: 80rpx;
-      background: #f2f2f2;
-      border-radius: 4rpx;
-      font-family: PingFangSC, PingFang SC;
-      font-weight: 400;
-      font-size: 28rpx;
-      color: #1fbd6e;
-      line-height: 80rpx;
-      text-align: center;
-    }
+  .allowDisabled {
+    border: none;
+    width: 238rpx;
+    height: 80rpx;
+    background: #84caa6;
+    border-radius: 4rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 28rpx;
+    color: #ffffff;
+    line-height: 80rpx;
+    text-align: center;
+  }
 
-    .allowDisabled {
-      border: none;
-      width: 238rpx;
-      height: 80rpx;
-      background: #84caa6;
-      border-radius: 4rpx;
-      font-family: PingFangSC, PingFang SC;
-      font-weight: 400;
-      font-size: 28rpx;
-      color: #ffffff;
-      line-height: 80rpx;
-      text-align: center;
-    }
-
-    .allowd {
-      border: none;
-      width: 238rpx;
-      height: 80rpx;
-      background: #03c15f;
-      border-radius: 4rpx;
-      font-family: PingFangSC, PingFang SC;
-      font-weight: 400;
-      font-size: 28rpx;
-      color: #ffffff;
-      line-height: 80rpx;
-      text-align: center;
-    }
+  .allowd {
+    border: none;
+    width: 238rpx;
+    height: 80rpx;
+    background: #03c15f;
+    border-radius: 4rpx;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 28rpx;
+    color: #ffffff;
+    line-height: 80rpx;
+    text-align: center;
   }
 }
 </style>

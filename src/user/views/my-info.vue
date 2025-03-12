@@ -13,8 +13,8 @@
               mode="widthFix"
               :src="
                 info
-                  ? info.avatarUrl
-                    ? info.avatarUrl
+                  ? info.headImg
+                    ? info.headImg
                     : '/static/avatar.png'
                   : '/static/avatar.png'
               "
@@ -26,7 +26,7 @@
       <van-cell title="昵称">
         <template #right-icon>
           <input
-            :value="info.nickName"
+            :value="info?.userName || ''"
             type="nickname"
             class="weui-input"
             placeholder="请输入昵称"
@@ -41,10 +41,7 @@
 import { onLoad } from "@dcloudio/uni-app";
 import { ref } from "vue";
 let avatarUrl = ref("");
-let info = ref<any>({
-  avatarUrl: "",
-  nickName: "",
-});
+let info = ref<any>(null);
 const onChooseAvatar = (e: any) => {
   console.log(e);
   avatarUrl.value = e.detail.avatarUrl;

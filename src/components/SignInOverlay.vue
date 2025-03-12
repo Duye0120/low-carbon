@@ -8,7 +8,7 @@
       <view class="sign-in-content">
         <!-- 签到天数提示 -->
         <view class="sign-in-days">
-          <text>— 已累计签到 {{ currentDay }} 天 —</text>
+          <text>— 签到赢积分 —</text>
         </view>
 
         <!-- 签到奖励网格 -->
@@ -29,7 +29,7 @@
                   <view :class="`coin-${item.point}`"></view>
                   <text class="reward-value">+{{ item.value }}</text>
                 </view>
-                <view v-if="currentDay > index" class="check-icon"></view>
+                <view v-if="item.isSign === 1" class="check-icon"></view>
               </view>
               <view class="day-label">第{{ item.day }}天</view>
             </view>
@@ -54,8 +54,8 @@
         </view>
 
         <!-- 签到按钮 -->
-        <view class="sign-in-button" @click="signIn">
-          <text>立即签到</text>
+        <view :class="todaySigned === 0 ? 'sign-in-button' : 'signed'" @click="signIn">
+          <text>{{ todaySigned === 0 ? '立即签到' : '今日已签到' }}</text>
         </view>
 
         <!-- 关闭按钮 -->
@@ -67,6 +67,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { getWeekSign, finishSignTask } from '@/pages/api/index'
 
 // 定义组件属性
 const props = defineProps({
@@ -80,17 +81,17 @@ const props = defineProps({
 const emit = defineEmits(["update:show", "close", "sign-in"]);
 
 // 当前签到天数
-const currentDay = ref(3);
-
+const currentDay = ref(0);
+let todaySigned = ref(0);
 // 签到奖励配置
 const rewards = ref([
-  { day: "一", value: 5, point: 1 },
-  { day: "二", value: 10, point: 1 },
-  { day: "三", value: 15, point: 3 },
-  { day: "四", value: 20, point: 3 },
-  { day: "五", value: 25, point: 3 },
-  { day: "六", value: 30, point: 3 },
-  { day: "七", value: 50, point: 6 },
+  { day: "一", value: 1, point: 1 },
+  { day: "二", value: 1, point: 1 },
+  { day: "三", value: 1, point: 1 },
+  { day: "四", value: 1, point: 1 },
+  { day: "五", value: 1, point: 1 },
+  { day: "六", value: 1, point: 1 },
+  { day: "七", value: 1, point: 1 },
 ]);
 
 // 点击蒙层
@@ -107,17 +108,33 @@ const closeOverlay = () => {
 
 // 签到
 const signIn = () => {
+  if (todaySigned.value) return
   // 执行签到逻辑
-  if (currentDay.value < 7) {
-    currentDay.value++;
-  }
-  emit("sign-in", currentDay.value);
-
-  // 签到后自动关闭弹窗
-  setTimeout(() => {
-    closeOverlay();
-  }, 1000);
+  finishSignTask({
+    wxId: uni.getStorageSync("uuid"),
+  }).then(() => {
+    getSignStatus();
+  });
 };
+
+const getSignStatus = () => {
+  getWeekSign({
+    wxId: uni.getStorageSync("uuid"),
+  }).then((res) => {
+    console.log(res);
+    rewards.value.forEach((item, index) => {
+      item.date = res.weekSign[index].date;
+      item.isSign = res.weekSign[index].isSign;
+    })
+    todaySigned.value = res.todaySigned;
+    let weekDay = new Date().getDay();
+    currentDay.value = weekDay - 1;
+  });
+}
+
+onMounted(() => {
+  getSignStatus();
+});
 </script>
 
 <style scoped lang="scss">
@@ -297,6 +314,21 @@ const signIn = () => {
   width: 80%;
   height: 80rpx;
   background-color: #ffa000;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-top: 34rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.signed {
+  width: 80%;
+  height: 80rpx;
+  background-color: #C5C8CE;
   border-radius: 40rpx;
   display: flex;
   align-items: center;

@@ -3,7 +3,22 @@
     {
       "path": "pages/index",
       "style": {
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/new-index",
+      "style": {
+        "navigationStyle": "custom",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/old-index",
+      "style": {
+        "navigationStyle": "custom",
+        "disableScroll": true
       }
     },
     {
@@ -50,23 +65,6 @@
       ]
     },
     {
-      "root": "news",
-      "pages": [
-        {
-          "path": "views/index",
-          "style": {
-            "navigationBarTitleText": "资讯中心"
-          }
-        },
-        {
-          "path": "views/detail",
-          "style": {
-            "navigationBarTitleText": "资讯详情"
-          }
-        }
-      ]
-    },
-    {
       "root": "main",
       "pages": [
         {
@@ -82,7 +80,7 @@
           }
         },
         {
-          "path": "iamge-text",
+          "path": "image-text",
           "style": {
             "navigationBarTitleText": "图文详情",
             "navigationBarTextStyle": "black",
@@ -138,7 +136,8 @@
       "van-overlay": "/wxcomponents/vant/overlay/index",
       "van-popup": "/wxcomponents/vant/popup/index",
       "van-cell-group": "/wxcomponents/vant/cell-group/index",
-      "van-cell": "/wxcomponents/vant/cell/index"
+      "van-cell": "/wxcomponents/vant/cell/index",
+      "van-dialog": "/wxcomponents/vant/dialog/index"
     },
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"

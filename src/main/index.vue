@@ -30,7 +30,7 @@
         <SceneContent v-if="activeTab === 'scene'" type="page" />
 
         <!-- 任务列表 -->
-        <TaskContent v-if="activeTab === 'task'" />
+        <TaskContent v-if="activeTab === 'task' && reLoad" :type="type" :pointId="pointId" />
 
         <!-- 排行榜 -->
         <RankingContent v-if="activeTab === 'ranking'" />
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
-import { onLoad } from "@dcloudio/uni-app";
+import { onLoad, onHide, onShow } from "@dcloudio/uni-app";
 import CommonHeader from "./components/CommonHeader.vue";
 import SceneContent from "../components/SceneContent.vue";
 import TaskContent from "./components/content/TaskContent.vue";
@@ -51,7 +51,7 @@ import { SecneType } from "./components/type.d";
 // 当前激活的选项卡
 const activeTab = ref("scene");
 const primaryColor = ref("#4da050");
-
+let reLoad = ref(false)
 // 选项卡数据
 const tabs = [
   {
@@ -75,16 +75,6 @@ const tabs = [
 const switchTab = (tabId: string) => {
   activeTab.value = tabId;
 };
-
-// 页面加载时从URL参数中获取选中的选项卡
-onLoad((query) => {
-  console.log("Page loaded with query:", query);
-  if (query && query.tab) {
-    activeTab.value = query.tab;
-  } else {
-    console.log("No tab option found in the query, using default tab.");
-  }
-});
 
 const getCircleLeft = (activeTab: string): string => {
   switch (activeTab) {
@@ -114,8 +104,21 @@ onUnmounted(() => {
   // 在组件卸载时移除事件监听
   uni.$off("sceneChange", handleSceneChange);
 });
-
-onLoad(() => {
+let pointId = ref("");
+let type = ref("");
+onLoad((query) => {
+  console.log("Page loaded with query:", query);
+  if (query && query.tab) {
+    activeTab.value = query.tab;
+  } else {
+    console.log("No tab option found in the query, using default tab.");
+  }
+  if (query && query.pointId && query.type) {
+    pointId.value = query.pointId;
+    type.value = query.type;
+    console.log("pointId:", pointId.value);
+  }
+  // 页面加载时从URL参数中获取选中的选项卡
   console.log("CommonHeader 组件已加载");
   // 初始化时从存储中获取场景ID
   uni.getStorage({
@@ -131,6 +134,15 @@ onLoad(() => {
       primaryColor.value = getPrimaryColorByScene("hydrogenVehicle");
     },
   });
+});
+
+onHide(() => {
+  console.log("页面隐藏");
+  reLoad.value = false;
+});
+
+onShow(() => {
+  reLoad.value = true;
 });
 
 const getPrimaryColorByScene = (sceneId: SecneType): string => {

@@ -12,10 +12,12 @@
       <view class="page-wrapper-content-question">{{ question }}</view>
       <view class="page-wrapper-content-answer">
         <button
-          @click="selectAnswer(item)"
+          @click="selectAnswer(item, index)"
           :class="{
-            'answer-button-true': item.label === answer && isRight !== null && item.isRight,
-            'answer-button-wrong': item.label === answer && isRight !== null && !item.isRight
+            'answer-button-true':
+              item.label === answer && isRight !== null && item.isRight,
+            'answer-button-wrong':
+              item.label === answer && isRight !== null && !item.isRight,
           }"
           v-for="item in options"
           :key="item.value"
@@ -34,7 +36,9 @@
         v-if="isRight !== null"
       >
         回答{{ isRight && answer ? "正确" : "错误" }}，{{
-          isRight && answer ? "恭喜获得5点积分" : "送你1点零碳积分再接再厉"
+          isRight && answer
+            ? "恭喜获得" + score + "点积分"
+            : "送你" + score + "点零碳积分再接再厉"
         }}
       </view>
       <view
@@ -49,31 +53,66 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-let question = ref("下列哪种物质不属于有害垃圾？");
-let options = ref([
-  {
-    label: "废电池",
-    value: "1",
-    isRight: false,
-  },
-  {
-    label: "废报纸",
-    value: "2",
-    isRight: true,
-  },
-]);
+import { getQuesDetail, finishQuestionTask } from "@/main/api";
+import { onLoad } from "@dcloudio/uni-app";
+let question = ref("");
+let options = ref([]);
+let qusetionId = ref("");
+let pointId = ref("");
 let answer = ref("");
 let isRight = ref<any>(null);
-let analyze = ref("废电池属于有害垃圾；废报纸属于可回收垃圾。");
+let analyze = ref("");
+let score = ref(0);
 const selectAnswer = (item: {
   label: string;
   value: string;
   isRight: boolean;
-}) => {
+}, index: number) => {
   console.log(item, "item");
+  // if (isRight.value !== null) return;
   answer.value = item.label;
   isRight.value = item.isRight;
-}
+  score.value = item.value;
+  finishQuestionTask({
+    questionId: qusetionId.value,
+    isRight: item.isRight ? 1 : 0,
+    pointId: pointId.value,
+    rewardScore: item.value,
+    selectedAnswer: index === 0 ? 'A' : 'B',
+    wxId: uni.getStorageSync("uuid"),
+  }).then(res => {
+    console.log(res);
+  }).catch(err => {
+    console.log(err);
+  });
+};
+onLoad((query) => {
+  qusetionId.value = query.taskId;
+  pointId.value = query.pointId;
+  getQues();
+});
+
+const getQues = () => {
+  getQuesDetail({
+    id: qusetionId.value,
+  }).then((res) => {
+    console.log(res);
+    question.value = res.questionText;
+    options.value = [
+      {
+        label: res.optionA,
+        value: res.questionAnswer === "A" ? res.rightScore : res.errorScore,
+        isRight: res.questionAnswer === "A",
+      },
+      {
+        label: res.optionB,
+        value: res.questionAnswer === "B" ? res.rightScore : res.errorScore,
+        isRight: res.questionAnswer === "B",
+      },
+    ];
+    analyze.value = res.questionAnalysis;
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -129,7 +168,7 @@ const selectAnswer = (item: {
         color: #ffffff;
       }
       .answer-button-wrong {
-        background: #E50000;
+        background: #e50000;
         color: #ffffff;
       }
     }
@@ -137,14 +176,13 @@ const selectAnswer = (item: {
       font-family: PingFangSC, PingFang SC;
       font-weight: 400;
       font-size: 28rpx;
-      color: #e50000;
       text-align: center;
-      .right {
-        color: #00c463 !important;
-      }
-      .wrong {
-        color: #e50000 !important;
-      }
+    }
+    .right {
+      color: #00c463 !important;
+    }
+    .wrong {
+      color: #e50000 !important;
     }
     &-analyze {
       & > label {

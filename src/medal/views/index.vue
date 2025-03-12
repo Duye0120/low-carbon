@@ -123,6 +123,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { pageInfoVirtualMedal } from "@/medal/api";
+import { onLoad } from "@dcloudio/uni-app";
 let activeTab = ref("电子勋章");
 const findBackground = (name: string) => {
   return backgroundList.find((i) => name.indexOf(i.name) > -1);
@@ -284,6 +286,18 @@ const routeTo = (item: any) => {
     url: item.url,
   });
 };
+const getMedalList = async () => {
+  try {
+    let res = await pageInfoVirtualMedal({
+      pageNum: 1,
+      pageSize: 999,
+    });
+    console.log(res);
+  } catch (error) {}
+};
+onLoad(() => {
+  getMedalList();
+});
 </script>
 
 <style scoped lang="scss">

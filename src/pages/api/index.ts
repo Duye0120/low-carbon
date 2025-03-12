@@ -18,3 +18,28 @@ export function pageInfoPoint(data: { pageNum: number; pageSize: number }) {
     data,
   });
 }
+
+export interface WeekSignItem {
+  date: string;
+  isSign: number;
+}
+
+export function getWeekSign(data: { wxId: string }) {
+  return request<{
+    signDays: number;
+    todaySigned: number;
+    weekSign: Array<WeekSignItem>;
+  }>({
+    url: "/low/carbon/task/getWeekSign",
+    method: "POST",
+    data,
+  });
+}
+
+export function finishSignTask(data: { wxId: string }) {
+  return request<void>({
+    url: "/low/carbon/task/finishSignTask",
+    method: "POST",
+    data,
+  });
+}
