@@ -1,5 +1,12 @@
 <template>
   <view class="container">
+    <van-icon
+      @tap="goBack"
+      class="back-icon"
+      :style="{ top: `${statusBarHeight}px` }"
+      color="#000"
+      name="arrow-left"
+    />
     <!-- 固定的头部区域 -->
     <view class="fixed-header">
       <CommonHeader />
@@ -27,10 +34,14 @@
       <!-- 可滚动的内容区域 -->
       <view class="scrollable-content">
         <!-- 场景切换 -->
-        <SceneContent v-if="activeTab === 'scene'" type="page" />
+        <SceneContent v-show="activeTab === 'scene'" type="page" />
 
         <!-- 任务列表 -->
-        <TaskContent v-if="activeTab === 'task' && reLoad" :type="type" :pointId="pointId" />
+        <TaskContent
+          v-if="activeTab === 'task' && reLoad"
+          :type="type"
+          :pointId="pointId"
+        />
 
         <!-- 排行榜 -->
         <RankingContent v-if="activeTab === 'ranking'" />
@@ -47,11 +58,11 @@ import SceneContent from "../components/SceneContent.vue";
 import TaskContent from "./components/content/TaskContent.vue";
 import RankingContent from "./components/content/RankingContent.vue";
 import { SecneType } from "./components/type.d";
-
+let statusBarHeight = ref(0);
 // 当前激活的选项卡
 const activeTab = ref("scene");
 const primaryColor = ref("#4da050");
-let reLoad = ref(false)
+let reLoad = ref(false);
 // 选项卡数据
 const tabs = [
   {
@@ -74,6 +85,11 @@ const tabs = [
 // 切换选项卡
 const switchTab = (tabId: string) => {
   activeTab.value = tabId;
+  if (tabId === 'task') {
+    reLoad.value = true;
+  } else {
+    reLoad.value = false;
+  }
 };
 
 const getCircleLeft = (activeTab: string): string => {
@@ -90,9 +106,14 @@ const getCircleLeft = (activeTab: string): string => {
 };
 
 // 场景变化处理函数
-const handleSceneChange = (sceneId: SecneType) => {
-  console.log("收到场景变化事件:", sceneId);
-  primaryColor.value = getPrimaryColorByScene(sceneId);
+const handleSceneChange = (scene: { id: string; title: string; realId: string }) => {
+  console.log("收到场景变化事件:", scene.value);
+  primaryColor.value = getPrimaryColorByScene(scene.id);
+  pointId.value = scene.realId;
+  type.value = scene.title;
+  console.log("primaryColor:", primaryColor.value);
+  console.log("pointId:", pointId.value);
+  console.log("type:", type.value);
 };
 
 onMounted(() => {
@@ -142,9 +163,15 @@ onHide(() => {
 });
 
 onShow(() => {
-  reLoad.value = true;
+  statusBarHeight.value = uni.getWindowInfo().statusBarHeight + 10;
+  console.log("statusBarHeight:", statusBarHeight.value);
+  if (activeTab.value === 'task') {
+    reLoad.value = true;
+  }
 });
-
+const goBack = () => {
+  uni.navigateBack();
+};
 const getPrimaryColorByScene = (sceneId: SecneType): string => {
   switch (sceneId) {
     case "hydrogenVehicle":
@@ -172,6 +199,12 @@ const getPrimaryColorByScene = (sceneId: SecneType): string => {
   flex-direction: column;
   overflow: hidden;
   /* 防止整体滚动 */
+}
+
+.back-icon {
+  position: absolute;
+  left: 20rpx;
+  z-index: 11000;
 }
 
 .content {

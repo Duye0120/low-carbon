@@ -8,23 +8,17 @@
       }
     },
     {
-      "path": "pages/new-index",
-      "style": {
-        "navigationStyle": "custom",
-        "disableScroll": true
-      }
-    },
-    {
-      "path": "pages/old-index",
-      "style": {
-        "navigationStyle": "custom",
-        "disableScroll": true
-      }
-    },
-    {
       "path": "pages/login",
       "style": {
         "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/integral-rule",
+      "style": {
+        "navigationBarTitleText": "积分规则",
+        "navigationBarTextStyle": "black",
+        "navigationBarBackgroundColor": "#f1f8ff"
       }
     }
   ],
@@ -95,7 +89,7 @@
         {
           "path": "views/index",
           "style": {
-            "navigationBarTitleText": "生成报告"
+            "navigationBarTitleText": "减碳报告"
           }
         }
       ]

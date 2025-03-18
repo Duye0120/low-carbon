@@ -50,3 +50,10 @@ export function getArticleDetail(data: { id: string }) {
     data,
   });
 }
+
+export function getScoreNumTop10() {
+  return request<any>({
+    url: "/low/carbon/score/record/getScoreNumTop10",
+    method: "POST",
+  });
+}

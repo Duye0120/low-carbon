@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { getDailyTask, finishClockTask } from "@/main/api";
 import { taskList } from "./taskList";
 let props = defineProps<{
@@ -59,6 +59,7 @@ const completeTask = (task: any) => {
 };
 
 const finishTask = (task: any) => {
+  console.log(task, props.pointId, '232323');
   finishClockTask({
     pointId: props.pointId,
     wxId: uni.getStorageSync("uuid"),
@@ -123,6 +124,13 @@ const getTask = () => {
     console.log(res, tasks.value);
   });
 };
+
+watch(() => props.pointId, () => {
+  if (props.pointId) {
+    console.log("pointId changed to:", props.pointId);
+    getTask();
+  }
+});
 
 onMounted(() => {
   getTask();

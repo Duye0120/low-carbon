@@ -22,11 +22,12 @@ export function getToken(data: {
   });
 }
 
-export function getUserInfo() {
+export function getUserInfoByOpenId(data: { wxId: string }) {
   return request<{
-    openid: string;
+    wxId: string;
   }>({
-    url: "/BaseUser/selectNow",
+    url: "/low/carbon/applet/getUserInfo",
     method: "GET",
+    data: data ? data : { wxId: uni.getStorageSync("uuid") },
   });
 }

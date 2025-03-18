@@ -1,106 +1,80 @@
 <template>
-  <view class="page-content">
-    <cover-view class="user-info">
-      <cover-view class="avatar-wrapper">
-        <cover-image
+  <scroll-view scroll-x :scroll-left="scrollLeft" class="page-content">
+    <view class="map-image">
+      <image
+        v-for="(item, index) in mapPoints"
+        :key="item.name"
+        @touchstart="onFocus(item)"
+        @touchend="removeFocus(item)"
+        @touchcancel="removeFocus(item)"
+        :style="{
+          top: `${item.y}rpx`,
+          left: `${item.x}rpx`,
+          width: `${item.width}rpx`,
+        }"
+        :class="['clickView', onFocusView === item.name ? 'focused' : '']"
+        :src="item.src"
+        mode="widthFix"
+      >
+      </image>
+    </view>
+    <view class="user-info">
+      <view class="avatar-wrapper">
+        <image
           class="avatar"
           :src="
             info
               ? info.headImg
-                ? info.headImg
+                ? config.fileUrl + info.headImg
                 : '/static/avatar.png'
               : '/static/avatar.png'
           "
           mode="aspectFill"
-        ></cover-image>
-      </cover-view>
-      <cover-view class="user-details">
-        <cover-view class="username">{{
-          info ? info.userName : "游客"
-        }}</cover-view>
-        <cover-view class="points">积分 304</cover-view>
-      </cover-view>
-    </cover-view>
-    <canvas
-      class="map-image"
-      canvas-id="firstCanvas"
-      id="firstCanvas"
-      @touchstart="handleTouchStart"
-      @touchmove="handleTouchMove"
-      @touchend="handleTouchEnd"
-    ></canvas>
-    <cover-image
-      v-for="(item, index) in mapPoints"
-      :key="item.name"
-      @touchstart="onFocus(item)"
-      @touchend="removeFocus(item)"
-      @touchcancel="removeFocus(item)"
-      :style="{
-        left: `${
-          item.x * img.scale + (winWidth - img.drawWidth) / 2 + offset.x
-        }px`,
-        top: `${
-          item.y * img.scale + (winHeight - img.drawHeight) / 2 + offset.y
-        }px`,
-      }"
-      :class="[
-        'clickView' + (index + 1),
-        onFocusView === item.name ? 'focused' : '',
-      ]"
-      :src="item.src"
-      mode=""
-    >
-    </cover-image>
-    <cover-view class="page-content-menu">
-      <cover-view class="page-content-menu-btnLine">
-        <cover-view
-          @click="add"
-          v-if="true"
-          class="open-btn"
-          type="button"
-          plain
-        >
-          <cover-view class="text">开启低碳之旅</cover-view>
-          <cover-image
-            class="next"
-            src="/static/next.png"
-            mode="widthFix"
-          ></cover-image>
-        </cover-view>
-        <cover-image
-          v-else
+        ></image>
+      </view>
+      <view class="user-details">
+        <view class="username">{{ info ? info.userName : "游客" }}</view>
+        <view class="points">{{ scoreName(info ? info.remainScore : 0) }}</view>
+      </view>
+    </view>
+    <view class="page-content-menu">
+      <view class="page-content-menu-btnLine">
+        <!-- <button @click="openLowCarbon" v-if="true" class="open-btn" type="button" plain>
+          开启低碳之旅
+          <image src="/static/next.png" mode="widthFix"></image>
+        </button> -->
+        <image
+          v-if="showLowCarbon"
           class="ball"
           src="/static/generate-report.png"
           mode="aspectFit"
           @tap="add"
-        ></cover-image>
-      </cover-view>
-      <cover-view class="page-content-menu-top">
-        <cover-view class="page-content-menu-crossborder top"></cover-view>
-        <cover-view @click="navigatorTo('每日任务')" class="item1"
-          >每日任务</cover-view
+        ></image>
+      </view>
+      <view class="page-content-menu-top">
+        <view
+          @click="navigatorTo('每日任务')"
+          class="page-content-menu-top-afterBoard"
+          >每日任务</view
         >
-        <cover-view class="item2" @click="navigatorTo('场景切换')"
-          >场景切换</cover-view
+        <view @click="navigatorTo('场景切换')">场景切换</view>
+      </view>
+      <view class="page-content-menu-bottom">
+        <view
+          @click="navigatorTo('个人中心')"
+          class="page-content-menu-top-afterBoard"
+          >个人中心</view
         >
-        <cover-view class="page-content-menu-crossborder middle"></cover-view>
-      </cover-view>
-      <cover-view class="page-content-menu-bottom">
-        <cover-view class="page-content-menu-crossborder top"></cover-view>
-        <cover-view @click="navigatorTo('个人中心')" class="item1"
-          >个人中心</cover-view
+        <view
+          @click="navigatorTo('我的勋章')"
+          class="page-content-menu-top-afterBoard"
+          >我的勋章</view
         >
-        <cover-view @click="navigatorTo('我的勋章')" class="item2"
-          >我的勋章</cover-view
-        >
-        <cover-view class="item3" @click="navigatorTo('积分规则')"
-          >积分规则</cover-view
-        >
-        <cover-view class="page-content-menu-crossborder bottom"></cover-view>
-      </cover-view>
-    </cover-view>
+        <view @click="navigatorTo('积分规则')">积分规则</view>
+      </view>
+    </view>
 
-    <!-- <van-popup
+    <van-popup
       :show="popupVisible"
       closeable
       round
@@ -108,13 +82,17 @@
       custom-style="height: 80%; overflow:visible;border-radius: 40rpx 40rpx 0rpx 0rpx;"
       @close="closePopup"
     >
-      <cover-view class="popup-content">
-        <cover-view class="popup-title">场景切换</cover-view>
-        <cover-view class="popup-scene">
-          <SceneContent type="popup" v-on:close-popup="closePopup" />
-        </cover-view>
-      </cover-view>
-    </van-popup> -->
+      <view class="popup-content">
+        <view class="popup-title">场景切换</view>
+        <view class="popup-scene">
+          <SceneContent
+            type="popup"
+            v-on:enterScene="enterScene"
+            v-on:close-popup="closePopup"
+          />
+        </view>
+      </view>
+    </van-popup>
     <!-- 签到弹窗组件 -->
     <SignInOverlay
       v-if="showSignInOverlay"
@@ -122,122 +100,109 @@
       @close="handleCloseSignIn"
       @sign-in="handleSignIn"
     />
+    <van-dialog
+      use-slot
+      @close="handleCloseDialog"
+      @confirm="handleConfirm"
+      show-cancel-button
+      :show="showDialog"
+      title="开启低碳之旅？"
+      id="van-dialog"
+    >
+      <view class="van-dialog__content">确认进入任务点位开启低碳之旅？</view>
+    </van-dialog>
+  </scroll-view>
+  <view
+    v-if="showUsePrompt"
+    class="use-prompt1"
+    :style="{
+      backgroundImage: `url(https://df-wechat.app.atonal.cn/fileupload/static/step${step}.png)`,
+    }"
+  >
+    <image
+      v-if="step === 1"
+      @click="nextStep"
+      class="next-step1"
+      src="/static/step1.png"
+      mode="widthFix"
+    ></image>
+    <image
+      v-if="step === 2"
+      @click="nextStep"
+      class="next-step2"
+      src="/static/step2.png"
+      mode="widthFix"
+    ></image>
   </view>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { onLoad } from "@dcloudio/uni-app";
+let showUsePrompt = ref(false);
+import { ref, reactive, getCurrentInstance } from "vue";
+import { onLoad, onShow } from "@dcloudio/uni-app";
 import SignInOverlay from "@/components/SignInOverlay.vue";
-// import SceneContent from "@/components/SceneContent.vue";
-import OverLay from "@/components/over-lay/index.vue";
-import { getUserInfo } from "@/api/account";
+import config from "@/config";
+import { scoreName } from "./api/scoreName";
+import SceneContent from "@/components/SceneContent.vue";
+import { getUserInfoByOpenId } from "@/api/account";
 import { pageInfoPoint } from "./api/index";
 import type { PointItem } from "./api/index";
 const showSignInOverlay = ref(false);
-let info = ref<any>({
-  userName: "游客",
-  headImg: "/static/avatar.png",
-});
+let showLowCarbon = ref(false);
+let scrollLeft = ref(0);
+let showDialog = ref(false);
+let step = ref(1);
+let info = ref<any>(null);
 let onFocusView = ref("");
 const popupVisible = ref(false);
 // 地图上的点位数据
 const mapPoints = ref([
-  { name: "乘坐氢能交通", src: "/static/czqnjt.png", x: 2040, y: 375 },
-  { name: "发电步道发电", src: "/static/fdbdfd.png", x: 2040, y: 290 },
-  { name: "喝海露纯净水", src: "/static/hhlcjs.png", x: 1950, y: 480 },
-  { name: "体验零碳单车", src: "/static/tyltdc.png", x: 2100, y: 380 },
-  { name: "零碳小屋", src: "/static/ltxw.png", x: 1990, y: 400 },
+  {
+    key: "hydrogenVehicle",
+    name: "乘坐氢能交通",
+    src: "/static/czqnjt.png",
+    x: 1926,
+    y: 410,
+    width: 134,
+  },
+  {
+    key: "gasElectricity",
+    name: "发电步道发电",
+    src: "/static/fdbdfd.png",
+    x: 2076,
+    y: 308,
+    width: 166,
+  },
+  {
+    key: "water",
+    name: "喝海露纯净水",
+    src: "/static/hhlcjs.png",
+    x: 1890,
+    y: 740,
+    width: 178,
+  },
+  {
+    key: "bike",
+    name: "体验零碳单车",
+    src: "/static/tyltdc.png",
+    x: 2186,
+    y: 498,
+    width: 152,
+  },
+  {
+    key: "zeroCarbonHouse",
+    name: "零碳小屋",
+    src: "/static/ltxw.png",
+    x: 1908,
+    y: 578,
+    width: 130,
+  },
 ]);
 let winWidth = ref(0);
 let winHeight = ref(0);
-let tempPath = ref("");
-const ctx = ref(null);
-const img = reactive({
-  url: "https://df-wechat.app.atonal.cn/fileupload/static/map.png",
-  width: 0,
-  height: 0,
-  drawWidth: 0,
-  drawHeight: 0,
-  scale: 2,
-  loaded: false,
-});
-const offset = reactive({
-  x: -343,
-  y: 364,
-  maxX: 0,
-  maxY: 0,
-  startX: 0,
-  startY: 0,
-});
-// 加载网络图片（关键修正）
-const loadImage = () => {
-  return new Promise((resolve, reject) => {
-    uni.downloadFile({
-      url: img.url,
-      success: (res) => {
-        if (res.statusCode === 200) {
-          uni.getImageInfo({
-            src: res.tempFilePath,
-            success: (infoRes) => {
-              img.width = infoRes.width;
-              img.height = infoRes.height;
-              img.drawHeight = infoRes.height * 1;
-              img.scale = img.drawHeight / infoRes.height;
-              img.drawWidth = infoRes.width * img.scale;
-              img.loaded = true;
-              // 计算最大偏移量
-              offset.maxX = Math.max(0, (img.drawWidth - winWidth.value) / 2);
-              offset.maxY = Math.max(0, (img.drawHeight - winHeight.value) / 2);
-              resolve(res.tempFilePath);
-            },
-          });
-        }
-      },
-    });
-  });
-};
-// 整合绘制方法
-const draw = async (tempPath) => {
-  if (!img.loaded) return;
-
-  ctx.value.clearRect(0, 0, winWidth.value, winHeight.value);
-
-  // 计算绘制位置
-  const drawX = (winWidth.value - img.drawWidth) / 2 + offset.x;
-  const drawY = (winHeight.value - img.drawHeight) / 2 + offset.y;
-
-  ctx.value.drawImage(tempPath, drawX, drawY, img.drawWidth, img.drawHeight);
-  console.log("draw");
-  ctx.value.draw();
-};
-// 修改handleTouchStart
-const handleTouchStart = (e) => {
-  offset.startX = e.touches[0].pageX;
-  offset.startY = e.touches[0].pageY;
-};
-
-// 修改handleTouchMove
-const handleTouchMove = (e) => {
-  if (!img.loaded || img.drawWidth <= winWidth.value) return;
-
-  const deltaX = e.touches[0].pageX - offset.startX;
-  const deltaY = e.touches[0].pageY - offset.startY;
-
-  offset.x = Math.max(-offset.maxX, Math.min(offset.maxX, offset.x + deltaX));
-  offset.y = Math.max(-offset.maxY, Math.min(offset.maxY, offset.y + deltaY));
-
-  offset.startX = e.touches[0].pageX;
-  offset.startY = e.touches[0].pageY;
-  console.log(offset);
-  draw(tempPath.value);
-};
-
-const handleTouchEnd = () => {
-  offset.startX = 0;
-  offset.startY = 0;
-};
 const add = (e: any) => {
+  showLowCarbon.value = false;
+  uni.setStorageSync("showLowCarbon", false);
   uni.navigateTo({
     url: "/report/views/index",
   });
@@ -261,22 +226,103 @@ const navigatorTo = (item: string) => {
       uni.navigateTo({ url: `/medal/views/index` });
       break;
     case "积分规则":
-      uni.navigateTo({ url: `/integral/index` });
+      uni.navigateTo({ url: `/pages/integral-rule` });
       break;
     case "资讯中心":
       uni.navigateTo({ url: `/news/views/index` });
       break;
   }
 };
+let openTaskItem = ref({});
 const onFocus = (item: { name: string; id: string }) => {
   console.log(item, "onFocus");
   onFocusView.value = item.name;
+  openTaskItem.value = item;
 };
+let isScene = ref(false);
 const removeFocus = (item: { name: string; id: string }) => {
   onFocusView.value = "";
+  if (!showLowCarbon.value) {
+    showDialog.value = true;
+  } else {
+    uni.navigateTo({
+      url: `/main/index?tab=task&pointId=${openTaskItem.value.id}&type=${openTaskItem.value.name}`,
+    });
+    if (!isScene.value) {
+      saveSceneAndEmitEvent(openTaskItem.value);
+    }
+    openTaskItem.value = {};
+  }
+};
+const enterScene = (scene: { realId: string; title: string }) => {
+  console.log(scene, "enterScene");
+  isScene.value = true;
+  if (!showLowCarbon.value) {
+    showDialog.value = true;
+    openTaskItem.value = {
+      id: scene.realId,
+      name: scene.title,
+    };
+  } else {
+    uni.navigateTo({
+      url: `/main/index?tab=scene&pointId=${scene.realId}&type=${scene.title}`,
+    });
+    isScene.value = false;
+    openTaskItem.value = {};
+  }
+};
+const handleCloseDialog = () => {
+  console.log("handleCloseDialog");
+  showDialog.value = false;
+  isScene.value = false;
+  openTaskItem.value = {};
+};
+const handleConfirm = () => {
+  console.log("handleConfirm");
+  showDialog.value = false;
   uni.navigateTo({
-    url: `/main/index?tab=task&pointId=${item.id}&type=${item.name}`,
+    url: `/main/index?tab=${isScene.value ? "scene" : "task"}&pointId=${
+      openTaskItem.value.id
+    }&type=${openTaskItem.value.name}`,
   });
+  if (!isScene.value) {
+    saveSceneAndEmitEvent({
+      key: openTaskItem.value.key,
+      title: openTaskItem.value.name,
+      realId: openTaskItem.value.id,
+    });
+  }
+  isScene.value = false;
+  openTaskItem.value = {};
+  showLowCarbon.value = true;
+  uni.setStorageSync("showLowCarbon", true);
+};
+const saveSceneAndEmitEvent = async (scene: { key: string; title: string; realId: string }) => {
+  console.log(scene, "saveSceneAndEmitEvent")
+  // 先存储数据
+  uni.setStorage({
+    key: "SceneContent",
+    data: scene.key,
+    success: function () {
+      console.log("场景数据存储成功");
+      // 存储成功后发送事件
+      setTimeout(() => {
+        uni.$emit("sceneChange", scene);
+        console.log("已发送场景变化事件:", scene.key);
+      }, 100);
+    },
+  });
+  console.log(uni.getStorageSync("SceneContent"));
+};
+const nextStep = () => {
+  if (step.value === 1) {
+    step.value = 2;
+  } else {
+    showUsePrompt.value = false;
+  }
+};
+const rpxToPx = (rpx: number) => {
+  return rpx * (uni.getSystemInfoSync().windowWidth / 750);
 };
 const showPopup = () => {
   popupVisible.value = true;
@@ -310,53 +356,87 @@ const getPointList = async () => {
 };
 const getUserInfoFunc = async () => {
   try {
-    console.log("uuid", uni.getStorageSync("uuid"));
-    let res = await getUserInfo();
-    console.log({ res123123: res });
-    info.value = res;
-    uni.setStorageSync("info", info.value);
+    let res1 = await getUserInfoByOpenId({
+      wxId: uni.getStorageSync("uuid"),
+    });
+    console.log({ res123123: res1 });
+    info.value = res1;
   } catch (error) {}
 };
-onLoad(async () => {
-  if (uni.getStorageSync("info")) {
-    info.value = uni.getStorageSync("info");
-  } else {
-    getUserInfoFunc();
-  }
-  getPointList();
+onLoad(async (query) => {
+  console.log(query);
+  showUsePrompt.value = query.showUsePrompt === "true";
+  getUserInfoFunc();
   const { windowWidth, windowHeight } = uni.getSystemInfoSync();
   winWidth.value = windowWidth;
   winHeight.value = windowHeight;
-  ctx.value = uni.createCanvasContext("firstCanvas", this);
-  try {
-    tempPath.value = await loadImage();
-    // 计算最大偏移
-    offset.maxX = Math.max(0, (img.drawWidth - winWidth.value) / 2);
-    offset.maxY = Math.max(0, (img.drawHeight - winHeight.value) / 2);
-    console.log({ offset, tempPath: tempPath.value });
-    await draw(tempPath.value);
-  } catch (e) {
-    uni.showToast({ title: `图片加载失败：${e}`, icon: "none" });
-  }
+  scrollLeft.value = rpxToPx(1700);
+  getPointList();
+  // #ifdef MP-WEIXIN
+  // wx.getWeRunData({
+  //   success(res) {
+  //     console.log({ res });
+  //     // 拿 encryptedData 到开发者后台解密开放数据
+  //     const encryptedData = res.encryptedData;
+  //     // 或拿 cloudID 通过云调用直接获取开放数据
+  //     const cloudID = res.cloudID;
+  //   },
+  // });
+  // #endif
+});
+onShow(() => {
+  showLowCarbon.value = uni.getStorageSync("showLowCarbon") || false;
 });
 </script>
 
 <style lang="scss" scoped>
+.next-step1 {
+  position: absolute;
+  bottom: 270rpx;
+  left: 200rpx;
+  width: 360rpx;
+}
+.next-step2 {
+  position: absolute;
+  bottom: 210rpx;
+  left: 200rpx;
+  width: 360rpx;
+}
+.use-prompt1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 .page-content {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  position: relative;
   .map-image {
-    width: 100%;
-    height: 100%;
+    width: 3340rpx;
+    height: 1624rpx;
     z-index: 0;
+    background-image: url("https://df-wechat.app.atonal.cn/fileupload/static/map.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+    .clickView {
+      transition: transform 0.2s ease;
+      will-change: transform;
+      position: absolute;
+    }
   }
   &-menu {
-    z-index: 2;
+    position: fixed;
+    bottom: 0;
     padding: 22rpx 44rpx 40rpx 44rpx;
     width: calc(100% - 88rpx);
-    position: absolute;
-    bottom: 0;
     color: #fff;
     background: linear-gradient(
       180deg,
@@ -367,28 +447,17 @@ onLoad(async () => {
     &-btnLine {
       height: 136rpx;
       margin-bottom: 106rpx;
-      .open-btn {
+      > .open-btn {
+        width: 480rpx;
         height: 136rpx;
         background: #ffffff;
         border: none;
-        position: relative;
-        margin: 0 80rpx;
-        border-radius: 8rpx;
-        .text {
-          font-family: PingFangSC, PingFang SC;
-          font-weight: 400;
-          font-size: 48rpx;
-          color: #262626;
-          position: absolute;
-          top: 20px;
-          left: 24px;
-        }
-        .next {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        > image {
           width: 86rpx;
-          position: absolute;
-          right: 30px;
-          top: 13px;
-          height: 86rpx;
+          margin-left: 36rpx;
         }
       }
       .ball {
@@ -397,74 +466,16 @@ onLoad(async () => {
         float: right;
       }
     }
+
     &-top {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
       height: 124rpx;
       text-align: center;
       line-height: 124rpx;
-      position: relative;
-      .item1 {
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 400;
-        font-size: 40rpx;
-        color: #ffffff;
-        width: 50%;
-        position: absolute;
-        left: 0;
-        border: none;
-        text-align: center;
-        line-height: 124rpx;
-      }
-      .item2 {
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 400;
-        font-size: 40rpx;
-        color: #ffffff;
-        width: 50%;
-        position: absolute;
-        right: 0;
-        border: none;
-        text-align: center;
-        line-height: 124rpx;
-      }
-    }
-    &-bottom {
-      height: 70rpx;
-      text-align: center;
-      line-height: 70rpx;
-      position: relative;
-      .item1 {
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 400;
-        font-size: 28rpx;
-        color: #ffffff;
-        width: 33%;
-        position: absolute;
-        left: 0;
-        text-align: center;
-        line-height: 70rpx;
-      }
-      .item2 {
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 400;
-        font-size: 28rpx;
-        color: #ffffff;
-        width: 33%;
-        position: absolute;
-        right: 33%;
-        text-align: center;
-        line-height: 70rpx;
-      }
-      .item3 {
-        width: 33%;
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 400;
-        font-size: 28rpx;
-        color: #ffffff;
-        position: absolute;
-        right: 0;
-        text-align: center;
-        line-height: 70rpx;
-      }
+
       &-afterBoard {
         position: relative;
 
@@ -486,27 +497,19 @@ onLoad(async () => {
         }
       }
     }
+
+    &-bottom {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      height: 70rpx;
+      text-align: center;
+      line-height: 70rpx;
+    }
   }
 }
-.page-content-menu-crossborder {
-  width: 100%;
-  height: 2rpx;
-  background: rgba(255, 255, 255, 0.3);
-}
-.top {
-  position: absolute;
-  top: 0;
-}
-.middle {
-  position: absolute;
-  top: 123rpx;
-}
-.bottom {
-  position: absolute;
-  bottom: 0;
-}
 .user-info {
-  position: absolute;
+  position: fixed;
   top: 160rpx;
   left: 32rpx;
   z-index: 10;
@@ -527,6 +530,7 @@ onLoad(async () => {
   background-color: #fff;
   position: absolute;
   left: 0;
+  z-index: 2;
 }
 
 .avatar {
@@ -543,6 +547,7 @@ onLoad(async () => {
   width: fit-content;
   padding: 0 35rpx 0 100rpx;
   border-radius: 45rpx;
+  z-index: 1;
 }
 
 .username {
@@ -564,70 +569,6 @@ onLoad(async () => {
   /* 通过缩放实现放大 */
 }
 
-.clickView1 {
-  transition: transform 0.2s ease;
-  // /* 使用transform代替width修改 */
-  will-change: transform;
-  // /* 预声明变化属性优化性能 */
-  position: absolute;
-  // top: 308rpx;
-  // right: 106rpx;
-  width: 96rpx;
-  height: 94rpx;
-  z-index: 2;
-}
-
-.clickView2 {
-  transition: transform 0.2s ease;
-  // /* 使用transform代替width修改 */
-  will-change: transform;
-  // /* 预声明变化属性优化性能 */
-  position: absolute;
-  // top: 362rpx;
-  // right: 282rpx;
-  width: 110rpx;
-  height: 78rpx;
-  z-index: 2;
-}
-
-.clickView3 {
-  transition: transform 0.2s ease;
-  // /* 使用transform代替width修改 */
-  will-change: transform;
-  // /* 预声明变化属性优化性能 */
-  position: absolute;
-  width: 108rpx;
-  height: 84rpx;
-  z-index: 2;
-  // top: 430rpx;
-  // right: 426rpx;
-}
-
-.clickView4 {
-  transition: transform 0.2s ease;
-  // /* 使用transform代替width修改 */
-  will-change: transform;
-  // /* 预声明变化属性优化性能 */
-  position: absolute;
-  width: 112rpx;
-  height: 74rpx;
-  z-index: 2;
-  // top: 590rpx;
-  // right: 368rpx;
-}
-
-.clickView5 {
-  transition: transform 0.2s ease;
-  // /* 使用transform代替width修改 */
-  will-change: transform;
-  // /* 预声明变化属性优化性能 */
-  position: absolute;
-  width: 84rpx;
-  height: 104rpx;
-  z-index: 2;
-  // top: 700rpx;
-  // right: 270rpx;
-}
 .popup-content {
   padding: 80rpx 20rpx 20rpx 20rpx;
   width: 100%;
@@ -666,5 +607,16 @@ onLoad(async () => {
 .popup-scene {
   width: 100%;
   height: 100%;
+}
+.van-dialog__content {
+  height: 36rpx;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 32rpx;
+  color: rgba(0, 0, 0, 0.85);
+  line-height: 36rpx;
+  text-align: center;
+  margin-top: 48rpx;
+  margin-bottom: 64rpx;
 }
 </style>

@@ -1,8 +1,12 @@
 <template>
   <view class="page-wrapper">
     <view class="page-header">
-      <image class="avatar" :src="info ? info.headImg : '/static/avatar.png'" mode="widthFix" />
-      <view class="userName">{{ info.userName }}</view>
+      <image
+        class="avatar"
+        :src="info ? config.fileUrl + info.headImg : '/static/avatar.png'"
+        mode="widthFix"
+      />
+      <view class="userName">{{ info ? info.userName : "游客" }}</view>
     </view>
     <view class="page-middle">
       <view class="middle-item" v-for="item in recordList" :key="item.label">
@@ -25,7 +29,11 @@
             {{ item.title }}
           </view>
           <view class="item-right">
-            <view style="margin-right: 16rpx; color: #DADFE2" class="item-right-extra">{{ item.extra }}</view>
+            <view
+              style="margin-right: 16rpx; color: #dadfe2"
+              class="item-right-extra"
+              >{{ item.extra }}</view
+            >
             <van-icon name="arrow" size="16" color="#C5C8CE" />
           </view>
         </view>
@@ -36,10 +44,12 @@
 
 <script setup lang="ts">
 import { onShow } from "@dcloudio/uni-app";
+import { getUserInfoByOpenId } from "@/api/account";
+import config from "@/config";
 import { ref } from "vue";
 let recordList = ref([
   {
-    label: "打卡点位",
+    label: "零碳积分",
     value: 5,
   },
   {
@@ -47,7 +57,7 @@ let recordList = ref([
     value: 3,
   },
   {
-    label: "低碳积分",
+    label: "兑换券",
     value: 300,
   },
 ]);
@@ -78,13 +88,29 @@ let list = ref([
   },
 ]);
 let messageAccount = ref(0);
-let info = uni.getStorageSync("info");
+let info = ref(null);
 console.log(info);
 const toSomePage = (item: { title: string; route: string }) => {
   uni.navigateTo({
     url: item.route,
-  })
+  });
 };
+const getUserInfoFunc = async () => {
+  try {
+    let res1 = await getUserInfoByOpenId({
+      wxId: uni.getStorageSync("uuid"),
+    });
+    console.log({ res123123: res1 });
+    info.value = res1;
+    recordList.value[0].value = res1.remainScore || 0;
+    recordList.value[1].value = res1.virtualMedalNum || 0;
+    recordList.value[2].value = res1.medalTicketNum || 0;
+  } catch (error) {}
+};
+
+onShow(() => {
+  getUserInfoFunc();
+});
 </script>
 
 <style scoped lang="scss">

@@ -7,7 +7,7 @@
         v-for="(user, index) in top3Users"
         :key="`$rank-item-${index}`"
         :rank="user?.rank ?? 0"
-        :avatar="user?.avatar ?? ''"
+        :avatar="user?.userImg ?? '/static/avatar.png'"
         :userName="user?.userName ?? ''"
         :points="user?.points ?? 0"
       />
@@ -24,10 +24,10 @@
         >
           <view class="rank-number">{{ index + 4 }}</view>
           <view class="user-avatar">
-            <image src="/static/avatar.png" mode="aspectFill"></image>
+            <image :src="config.fileUrl + user.userImg" mode="aspectFill"></image>
           </view>
           <view class="user-info">
-            <view class="user-name">用户名称</view>
+            <view class="user-name">{{ user.userName }}</view>
           </view>
           <view class="user-points">{{ user.points }}零碳积分</view>
         </view>
@@ -37,25 +37,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { getScoreNumTop10 } from "@/main/api";
 import RankingTop3 from "../RankingTop3.vue";
+import config from "@/config";
 import { IPropsType } from "../type.d";
 // 前三名用户数据
-const top3Users = ref<Array<Partial<IPropsType>>>([
-  { key: "2", userName: "用户名称2", points: 400, avatar: "", rank: 2 },
-  { key: "1", userName: "用户名称1", points: 400, avatar: "", rank: 1 },
-  { key: "3", userName: "用户名称3", points: 400, avatar: "", rank: 3 },
-]);
+const top3Users = ref<Array<Partial<IPropsType>>>([]);
 
 // 其他用户数据
-const otherUsers = ref([
-  { key: "4", userName: "用户名称", points: 400 },
-  { key: "5", userName: "用户名称", points: 400 },
-  { key: "6", userName: "用户名称", points: 400 },
-  { key: "7", userName: "用户名称", points: 400 },
-  { key: "8", userName: "用户名称", points: 400 },
-  { key: "9", userName: "用户名称", points: 400 },
-]);
+const otherUsers = ref([]);
+const getRanking = async () => {
+  try {
+    let res = await getScoreNumTop10();
+    let data = res.map((item, index) => ({
+      key: item.userId,
+      userName: item.userName,
+      points: item.allAddScore,
+      userImg: item.userImg,
+    }));
+    top3Users.value = [
+      data[1] ? {
+        ...data[1],
+        rank: 2,
+      } : null,
+      data[0] ? {
+        ...data[0],
+        rank: 1,
+      } : null,
+      data[2] ? {
+        ...data[2],
+        rank: 3,
+      } : null,
+    ].filter(Boolean);
+    console.log(top3Users.value);
+    otherUsers.value = data.slice(3)
+    console.log(otherUsers.value);
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+onMounted(() => {
+  getRanking();
+});
 </script>
 
 <style scoped lang="scss">

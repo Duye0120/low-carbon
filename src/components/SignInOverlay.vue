@@ -21,7 +21,7 @@
               class="reward-item"
               :class="{
                 signed: currentDay > index,
-                currentDay: currentDay === index,
+                currentDay: currentDay === index + 1,
               }"
             >
               <view>
@@ -41,7 +41,7 @@
               v-for="(item, index) in rewards.slice(4)"
               :key="index + 4"
               class="reward-item"
-              :class="{ signed: currentDay > index + 4 }"
+              :class="{ signed: currentDay > index + 4, currentDay: currentDay === index + 5 }"
             >
               <view class="coin-icon">
                 <view :class="`coin-${item.point}`"></view>
@@ -54,7 +54,7 @@
         </view>
 
         <!-- 签到按钮 -->
-        <view :class="todaySigned === 0 ? 'sign-in-button' : 'signed'" @click="signIn">
+        <view :class="todaySigned === 0 ? 'sign-in-button' : 'signed-btn'" @click="signIn">
           <text>{{ todaySigned === 0 ? '立即签到' : '今日已签到' }}</text>
         </view>
 
@@ -128,7 +128,12 @@ const getSignStatus = () => {
     })
     todaySigned.value = res.todaySigned;
     let weekDay = new Date().getDay();
-    currentDay.value = weekDay - 1;
+    console.log(weekDay);
+    if (weekDay === 0) {
+      weekDay = 7;
+    }
+    currentDay.value = weekDay;
+    console.log(currentDay.value);
   });
 }
 
@@ -325,7 +330,7 @@ onMounted(() => {
   box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1);
 }
 
-.signed {
+.signed-btn {
   width: 80%;
   height: 80rpx;
   background-color: #C5C8CE;

@@ -32,6 +32,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { pageInfoExchangeMedal } from "@/medal/api";
+import { onShow } from "@dcloudio/uni-app";
 const findBackground = (name: string) => {
   return backgroundList.find((i) => name.indexOf(i.name) > -1);
 };
@@ -83,6 +85,25 @@ let medalList = ref([
     time: "2024-10-10",
   },
 ]);
+const getMedalList = async () => {
+  try {
+    let res = await pageInfoExchangeMedal({
+      wxId: uni.getStorageSync("uuid"),
+      exchangeType: "电子勋章",
+    });
+    medalList.value = res.list.map((item: any) => ({
+      ...item,
+      name: item.medalName,
+      time: item.exchangeTime,
+    }));
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+onShow(() => {
+  getMedalList();
+});
 </script>
 
 <style scoped lang="scss">

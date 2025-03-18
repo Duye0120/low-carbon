@@ -5,13 +5,13 @@
       <view class="avatar-wrapper">
         <image
           class="avatar"
-          src="/static/avatar.png"
+          :src="info ? info.headImg ? config.fileUrl + info.headImg : '/static/avatar.png' : '/static/avatar.png'"
           mode="aspectFill"
         ></image>
       </view>
       <view class="user-details">
-        <view class="username">游客250221</view>
-        <view class="points">积分 304</view>
+        <view class="username">{{ info ? info.userName : "游客" }}</view>
+        <view class="points">{{ scoreName(info ? info.remainScore : 0) }}</view>
       </view>
     </view>
 
@@ -24,12 +24,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import { getUserInfoByOpenId } from "@/api/account";
+import config from "@/config";
+import { scoreName } from "@/pages/api/scoreName";
 // 如果需要可以添加更多动态功能
 import { onLoad } from "@dcloudio/uni-app";
 import { SecneType } from "./type.d";
 
 const bannerSrc = ref<string>("");
-
+let info = ref<any>(null);
 const getBannerSrcByKey = (key: SecneType): string => {
   switch (key) {
     case "hydrogenVehicle":
@@ -48,12 +51,21 @@ const getBannerSrcByKey = (key: SecneType): string => {
 };
 
 // 场景变化处理函数
-const handleSceneChange = (sceneId: SecneType) => {
-  console.log("收到场景变化事件:", sceneId);
-  bannerSrc.value = getBannerSrcByKey(sceneId);
+const handleSceneChange = (scene: { realId: string; title: string, id: string }) => {
+  console.log("收到场景变化事件:", scene);
+  bannerSrc.value = getBannerSrcByKey(scene.id);
 };
-
+const getUserInfoFunc = async () => {
+  try {
+    let res1 = await getUserInfoByOpenId({
+      wxId: uni.getStorageSync("uuid"),
+    });
+    console.log({ res123123: res1 });
+    info.value = res1;
+  } catch (error) {}
+};
 onMounted(() => {
+  getUserInfoFunc();
   // 在组件挂载时设置事件监听
   uni.$on("sceneChange", handleSceneChange);
 });

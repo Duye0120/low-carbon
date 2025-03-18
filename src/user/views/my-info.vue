@@ -3,34 +3,18 @@
     <van-cell-group>
       <van-cell title="头像">
         <template #right-icon>
-          <button
-            class="avatar-wrapper"
-            open-type="chooseAvatar"
-            @chooseavatar="onChooseAvatar"
-          >
+          <view>
             <image
               style="width: 64rpx; margin-right: 16rpx"
               mode="widthFix"
-              :src="
-                info
-                  ? info.headImg
-                    ? info.headImg
-                    : '/static/avatar.png'
-                  : '/static/avatar.png'
-              "
+              :src="info ? config.fileUrl + info.headImg : '/static/avatar.png'"
             />
-            <van-icon name="arrow" />
-          </button>
+          </view>
         </template>
       </van-cell>
       <van-cell title="昵称">
         <template #right-icon>
-          <input
-            :value="info?.userName || ''"
-            type="nickname"
-            class="weui-input"
-            placeholder="请输入昵称"
-          />
+          <view>{{ info?.userName || "" }}</view>
         </template>
       </van-cell>
     </van-cell-group>
@@ -38,7 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import { onLoad } from "@dcloudio/uni-app";
+import { getUserInfoByOpenId } from "@/api/account";
+import { onShow } from "@dcloudio/uni-app";
+import config from "@/config";
 import { ref } from "vue";
 let avatarUrl = ref("");
 let info = ref<any>(null);
@@ -46,8 +32,20 @@ const onChooseAvatar = (e: any) => {
   console.log(e);
   avatarUrl.value = e.detail.avatarUrl;
 };
-onLoad(() => {
-  info.value = uni.getStorageSync("info");
+const getUserInfoFunc = async () => {
+  try {
+    let res1 = await getUserInfoByOpenId({
+      wxId: uni.getStorageSync("uuid"),
+    });
+    console.log({ res123123: res1 });
+    info.value = res1;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+onShow(() => {
+  getUserInfoFunc();
 });
 </script>
 

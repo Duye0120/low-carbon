@@ -3,7 +3,7 @@
     <div class="top-user-card" :class="`rank-${rank}`">
       <div class="avatar-container">
         <img :src="rankBg" alt="排名背景" class="rank-bg" />
-        <img :src="avatar" alt="用户头像" class="avatar" />
+        <img :src="config.fileUrl + avatar" alt="用户头像" class="avatar" />
       </div>
       <div class="user-info">
         <div class="user-name">{{ userName }}</div>
@@ -16,6 +16,7 @@
 <script lang="ts" setup>
 import { defineProps, ref, computed } from "vue";
 import { IPropsType } from "./type.d";
+import config from "@/config";
 import No1 from "../static/ranking/No1.svg";
 import No2 from "../static/ranking/No2.svg";
 import No3 from "../static/ranking/No3.svg";
@@ -76,13 +77,13 @@ const rankBg = computed(() => {
       }
 
       .avatar {
-        width: 70px;
-        height: 70px;
+        width: 116rpx;
+        height: 116rpx;
         border-radius: 50%;
         object-fit: cover;
-        z-index: 2;
+        z-index: 0;
         position: relative;
-        top: -10px; /* 调整头像在背景中的位置 */
+        top: -6px;
       }
     }
 
@@ -94,7 +95,7 @@ const rankBg = computed(() => {
         color: #333;
         font-family: PingFangSC, PingFang SC;
         font-weight: 400;
-        color: rgba(0,0,0,0.85);
+        color: rgba(0, 0, 0, 0.85);
       }
 
       .user-points {

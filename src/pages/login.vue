@@ -201,7 +201,7 @@ const handleLogin = async () => {
   // 使用微信登录
   loading.value = true;
   let res = await getToken({
-    headImg: "/static/avatar.png",
+    headImg: "/fileupload/static/avatar.png",
     userName: nickName.value,
     wxId: openid.value,
   });
@@ -209,7 +209,7 @@ const handleLogin = async () => {
   loading.value = false;
   if (res) {
     uni.setStorageSync("authorization", res);
-    uni.navigateTo({ url: "/pages/index" });
+    uni.navigateTo({ url: "/pages/index?showUsePrompt=true" });
   }
 };
 onLoad(() => {

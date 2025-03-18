@@ -48,7 +48,7 @@ const requestTask = <T>(options: UniApp.RequestOptions): Promise<T> => {
                   const retryRes = await requestTask<T>(options);
                   resolve(retryRes);
                 } catch (error: any) {
-                  if (error?.type === 'LOGIN_REQUIRED') {
+                  if (error?.type === "LOGIN_REQUIRED") {
                     reject(error);
                     return;
                   }
@@ -75,7 +75,7 @@ const requestTask = <T>(options: UniApp.RequestOptions): Promise<T> => {
                 );
                 resolve(retryRes);
               }
-            } else if (err?.type === 'LOGIN_REQUIRED') {
+            } else if (err?.type === "LOGIN_REQUIRED") {
               // 直接拒绝，避免后续处理
               reject(err);
             } else {
@@ -122,7 +122,7 @@ async function toLogin(): Promise<void> {
             resolve();
           } else {
             navigateToLogin();
-            reject({ type: 'LOGIN_REQUIRED' }); // 新增错误类型标识
+            reject({ type: "LOGIN_REQUIRED" }); // 新增错误类型标识
           }
         })
         .catch(reject);
@@ -141,7 +141,7 @@ async function toLogin(): Promise<void> {
                   resolve();
                 } else {
                   navigateToLogin();
-                  reject({ type: 'LOGIN_REQUIRED' }); // 新增错误类型标识
+                  reject({ type: "LOGIN_REQUIRED" }); // 新增错误类型标识
                 }
               } catch (error) {
                 reject(error);
@@ -151,7 +151,7 @@ async function toLogin(): Promise<void> {
         },
         fail: () => {
           uni.showToast({ title: "登录失败", icon: "none" });
-          reject({ type: 'LOGIN_FAILED' });
+          reject({ type: "LOGIN_FAILED" });
         },
       });
     }

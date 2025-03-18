@@ -6,7 +6,7 @@
         v-for="item in entityList"
         :key="item.name"
       >
-        <image src="../static/entityMedal.png" mode="widthFix"></image>
+        <image :src="item.img" style="width: 160rpx;" mode="widthFix"></image>
         <view class="page-wrapper-entityList-item-content">
           <view class="page-wrapper-entityList-item-content-title"
             >{{ item.name }}（可至线下领取）</view
@@ -38,33 +38,31 @@
 </template>
 
 <script setup lang="ts">
+import { pageInfoTicket } from "@/medal/api";
+import { onLoad } from "@dcloudio/uni-app";
+import config from "@/config";
 import { ref } from "vue";
-let entityList = ref([
-  {
-    name: "XX勋章兑换券",
-    describe: "可至XX处领取实物勋章",
-    cost: 1,
-    hasUsed: false,
-  },
-  {
-    name: "XX勋章兑换券",
-    describe: "可至XX处领取实物勋章",
-    cost: 1,
-    hasUsed: true,
-  },
-  {
-    name: "XX勋章兑换券",
-    describe: "可至XX处领取实物勋章",
-    cost: 1,
-    hasUsed: true,
-  },
-  {
-    name: "XX勋章兑换券",
-    describe: "可至XX处领取实物勋章",
-    cost: 1,
-    hasUsed: true,
-  },
-]);
+let entityList = ref([]);
+const getTicketList = async () => {
+  try {
+    let res = await pageInfoTicket({
+      wxId: uni.getStorageSync("uuid"),
+    });
+    entityList.value = res.list.map((item: any) => ({
+      ...item,
+      name: item.medalName,
+      describe: item.medalDesc,
+      cost: 1,
+      hasUsed: item.isChecked === '1',
+      img: config.fileUrl + JSON.parse(item.medalImg)[0].url.replace(/\\/g, "/"),
+    }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+onLoad(() => {
+  getTicketList();
+});
 </script>
 
 <style scoped lang="scss">

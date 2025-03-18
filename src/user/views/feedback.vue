@@ -14,7 +14,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 let feedback = ref("");
-const submitForm = () => {};
+const submitForm = () => {
+  feedback.value = "";
+  uni.showToast({
+    title: "提交成功",
+    icon: "none",
+  });
+};
 </script>
 
 <style scoped lang="scss">

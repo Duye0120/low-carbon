@@ -2,8 +2,8 @@
   <view class="page-wrapper">
     <view
       class="page-wrapper-item"
-      v-for="(item, index) in integralRecordList"
-      :key="index"
+      v-for="item in integralRecordList"
+      :key="item.id"
     >
       <view class="page-wrapper-item-top">
         <view class="page-wrapper-item-top-label">{{ item.label }}</view>
@@ -15,9 +15,9 @@
         <view class="page-wrapper-item-bottom-createTime">{{
           item.createTime
         }}</view>
-        <view class="page-wrapper-item-bottom-surplusIntegral">剩余零碳积分&nbsp;{{
-          item.surplusIntegral
-        }}</view>
+        <view class="page-wrapper-item-bottom-surplusIntegral"
+          >剩余零碳积分&nbsp;{{ item.surplusIntegral }}</view
+        >
       </view>
     </view>
   </view>
@@ -25,6 +25,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { pageInfoScoreRecord } from "@/user/api";
+import { onShow } from "@dcloudio/uni-app";
 let integralRecordList = ref([
   {
     label: "兑换勋章",
@@ -51,6 +53,27 @@ let integralRecordList = ref([
     createTime: "2025.02.17 09:50",
   },
 ]);
+const getScoreRecord = async () => {
+  try {
+    let res = await pageInfoScoreRecord({
+      wxId: uni.getStorageSync("uuid"),
+    });
+    console.log(res);
+    integralRecordList.value = res.list.map((item) => ({
+      id: item.id,
+      label: item.operateDesc,
+      activeIntegral:
+        item.operateScore < 0
+          ? `${item.operateScore}`
+          : `+${item.operateScore}`,
+      surplusIntegral: item.remainScore,
+      createTime: item.operateTime,
+    }));
+  } catch (error) {}
+};
+onShow(() => {
+  getScoreRecord();
+});
 </script>
 
 <style scoped lang="scss">
