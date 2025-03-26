@@ -9,7 +9,7 @@
       <view class="userName">{{ info ? info.userName : "游客" }}</view>
     </view>
     <view class="page-middle">
-      <view class="middle-item" v-for="item in recordList" :key="item.label">
+      <view @click="routeTo(item)" class="middle-item" v-for="item in recordList" :key="item.label">
         <view class="middle-item-value">{{ item.value }}</view>
         <view class="middle-item-label">{{ item.label }}</view>
       </view>
@@ -50,15 +50,18 @@ import { ref } from "vue";
 let recordList = ref([
   {
     label: "零碳积分",
-    value: 5,
+    value: 300,
+    url: "/user/views/integral-record",
   },
   {
     label: "电子勋章",
-    value: 3,
+    value: 5,
+    url: "/medal/views/myCorpuscle",
   },
   {
     label: "兑换券",
-    value: 300,
+    value: 1,
+    url: "/medal/views/certificate",
   },
 ]);
 let list = ref([
@@ -106,6 +109,11 @@ const getUserInfoFunc = async () => {
     recordList.value[1].value = res1.virtualMedalNum || 0;
     recordList.value[2].value = res1.medalTicketNum || 0;
   } catch (error) {}
+};
+const routeTo = (item: any) => {
+  uni.navigateTo({
+    url: item.url,
+  });
 };
 
 onShow(() => {

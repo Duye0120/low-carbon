@@ -23,13 +23,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { getUserInfoByOpenId } from "@/api/account";
 import config from "@/config";
 import { scoreName } from "@/pages/api/scoreName";
 // 如果需要可以添加更多动态功能
-import { onLoad } from "@dcloudio/uni-app";
 import { SecneType } from "./type.d";
+const props = withDefaults(defineProps<{ sceneId: SecneType }>(), { sceneId: "" });
 
 const bannerSrc = ref<string>("");
 let info = ref<any>(null);
@@ -60,37 +60,17 @@ const getUserInfoFunc = async () => {
     let res1 = await getUserInfoByOpenId({
       wxId: uni.getStorageSync("uuid"),
     });
-    console.log({ res123123: res1 });
     info.value = res1;
   } catch (error) {}
 };
+
+watch(() => props.sceneId, () => {
+  console.log("场景变化:", props.sceneId);
+  bannerSrc.value = getBannerSrcByKey(props.sceneId);
+});
+
 onMounted(() => {
   getUserInfoFunc();
-  // 在组件挂载时设置事件监听
-  uni.$on("sceneChange", handleSceneChange);
-});
-
-onUnmounted(() => {
-  // 在组件卸载时移除事件监听
-  uni.$off("sceneChange", handleSceneChange);
-});
-
-onLoad(() => {
-  console.log("CommonHeader 组件已加载");
-  // 初始化时从存储中获取场景ID
-  uni.getStorage({
-    key: "SceneContent",
-    success: function (res) {
-      if (res.data) {
-        console.log("从存储中获取到场景ID:", res.data);
-        bannerSrc.value = getBannerSrcByKey(res.data);
-      }
-    },
-    fail: function () {
-      console.log("未找到存储的场景ID，使用默认场景");
-      bannerSrc.value = getBannerSrcByKey("hydrogenVehicle");
-    },
-  });
 });
 </script>
 

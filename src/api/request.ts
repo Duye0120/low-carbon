@@ -94,7 +94,6 @@ function responseHandler(res: Res): Promise<any> {
   const response = res.data;
   const { statusCode, data, header } = res as any; // 添加类型断言
   const { code } = response;
-  console.log({ response, code, statusCode, data, header });
   if (code === undefined) {
     return Promise.resolve(response);
   } else {
@@ -130,9 +129,12 @@ async function toLogin(): Promise<void> {
       uni.login({
         provider: "weixin",
         success: (loginRes) => {
+          console.log({ test: loginRes });
           getOpenId({ js_code: loginRes.code })
             .then(async (res) => {
+              console.log({ test: res });
               wxId = res.openid;
+              uni.setStorageSync("sessionKey", res.session_key);
               uni.setStorageSync("uuid", res.openid);
               try {
                 const res1 = await getToken({ wxId });

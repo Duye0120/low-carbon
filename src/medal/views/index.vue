@@ -103,7 +103,6 @@ let recordList = ref([
   },
 ]);
 const changeTab = (tab: string) => {
-  console.log(tab);
   activeTab.value = tab;
   if (tab === "电子勋章") {
     getMedalList();
@@ -112,23 +111,18 @@ const changeTab = (tab: string) => {
   }
 };
 const routeTo = (item: any) => {
-  console.log(item);
   uni.navigateTo({
     url: item.url,
   });
 };
 let nowExchange = ref({});
 const exchangeMedal = (item: any) => {
-  console.log(item);
   content.value = `确认消耗${item.cost}积分兑换该勋章？`;
-  console.log(content.value);
   nowExchange.value = item;
   showDialog.value = true;
 };
 const exchangeRealMedal = (item: any) => {
-  console.log(item);
   content.value = `确认消耗${item.cost}个电子勋章兑换该勋章？`;
-  console.log(content.value);
   nowExchange.value = item;
   showDialog.value = true;
 };
@@ -137,14 +131,11 @@ const handleCloseDialog = () => {
   nowExchange.value = {};
 };
 const handleConfirm = async () => {
-  console.log(nowExchange.value);
   const isRealMedal = Object.keys(nowExchange.value).indexOf("time") === -1;
-  console.log(isRealMedal);
   // TODO: 调用兑换接口
   try {
     let res;
     if (isRealMedal) {
-      console.log("兑换实物勋章");
       res = await exchangeRealMedalApi({
         wxId: uni.getStorageSync("uuid"),
         needNum: nowExchange.value.cost,
@@ -160,7 +151,6 @@ const handleConfirm = async () => {
         virtualMedalName: nowExchange.value.name,
       });
     }
-    console.log(res);
     uni.showToast({
       title: "兑换成功",
       icon: "success",
@@ -190,7 +180,6 @@ const getMedalList = async () => {
         config.fileUrl +
         JSON.parse(item.virtualMedalImg)[0].url.replace(/\\/g, "/"),
     }));
-    console.log(medalList.value);
   } catch (error) {
     console.log(error);
   }
@@ -200,7 +189,6 @@ const getRealMedalList = async () => {
     let res = await pageInfoRealMedal({
       wxId: uni.getStorageSync("uuid"),
     });
-    console.log(res);
     entityList.value = res.list.map((item: any) => ({
       name: item.realMedalName,
       describe: item.realMedalDesc,
@@ -222,7 +210,6 @@ const getUserInfoFunc = async () => {
     let res1 = await getUserInfoByOpenId({
       wxId: uni.getStorageSync("uuid"),
     });
-    console.log({ res123123: res1 });
     info.value = res1;
     recordList.value[0].value = res1.remainScore || 0;
     recordList.value[1].value = res1.virtualMedalNum || 0;

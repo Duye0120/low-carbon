@@ -57,3 +57,16 @@ export function getScoreNumTop10() {
     method: "POST",
   });
 }
+
+export function finishArticleTask(data: {
+  articleId: string;
+  wxId: string;
+  pointId: string;
+  rewardScore: number;
+}) {
+  return request<any>({
+    url: "/low/carbon/task/finishArticleTask",
+    method: "POST",
+    data,
+  });
+}

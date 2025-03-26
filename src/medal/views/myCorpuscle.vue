@@ -9,13 +9,9 @@
         <view
           class="page-wrapper-corpuscleList-item-pic"
           :style="{
-            width: `${findBackground(item.name)?.width}rpx`,
-            height: `${findBackground(item.name)?.height}rpx`,
-            background: `url(${
-              findBackground(item.name)?.activeImg
-            }) no-repeat center / ${findBackground(item.name)?.width}rpx ${
-              findBackground(item.name)?.height
-            }rpx`,
+            width: `160rpx`,
+            height: `160rpx`,
+            background: `url(${config.fileUrl + item.medalImg}) no-repeat center / 100% 100%`,
           }"
         >
         </view>
@@ -32,7 +28,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { pageInfoExchangeMedal } from "@/medal/api";
+import config from "@/config";
+import { pageInfoHaved } from "@/medal/api";
 import { onShow } from "@dcloudio/uni-app";
 const findBackground = (name: string) => {
   return backgroundList.find((i) => name.indexOf(i.name) > -1);
@@ -87,7 +84,7 @@ let medalList = ref([
 ]);
 const getMedalList = async () => {
   try {
-    let res = await pageInfoExchangeMedal({
+    let res = await pageInfoHaved({
       wxId: uni.getStorageSync("uuid"),
       exchangeType: "电子勋章",
     });
@@ -95,6 +92,7 @@ const getMedalList = async () => {
       ...item,
       name: item.medalName,
       time: item.exchangeTime,
+      medalImg: JSON.parse(item.medalImg)[0].url.replace(/\\/g, "/"),
     }));
     console.log(res);
   } catch (error) {

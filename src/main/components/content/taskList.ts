@@ -18,9 +18,9 @@ export const taskList = [
   },
   {
     id: 2,
-    title: "氢能观光车打卡",
+    title: "光伏充电座椅打卡",
     description: "体验并打卡即可获得零碳积分",
-    key: "hydrogenCar",
+    key: "hydrogenChair",
     icon: "../../static/taskList2.png",
     completed: false,
   },

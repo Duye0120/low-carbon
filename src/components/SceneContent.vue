@@ -28,20 +28,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted } from "vue";
+import { ref, defineProps, defineEmits, onMounted, watch } from "vue";
 import { pageInfoPoint } from "@/pages/api/index";
 import type { PointItem } from "@/pages/api/index";
 
-const emit = defineEmits(["close-popup", "enterScene"]);
+const emit = defineEmits(["close-popup", "enterScene", "switchScene"]);
 
 const props = defineProps({
   type: {
     type: String,
     default: "popup",
   },
-  scenes: {
-    type: Array,
-    default: () => [],
+  activeScene: {
+    type: String,
+    default: "",
+    required: false,
   },
 });
 
@@ -78,40 +79,26 @@ const scenes = ref([
     active: false,
   },
 ]);
-let activeScene = ref(null);
+watch(() => props.activeScene, () => {
+  scenes.value.forEach((scene) => {
+    scene.active = scene.id === props.activeScene;
+  });
+});
 // 切换场景
-const switchScene = (scene: { id: string; title: string; image: string } | string) => {
-  const sceneId = typeof scene === 'string' ? scene : scene.id;
+const switchScene = (
+  scene: { id: string; title: string; image: string } | string
+) => {
+  const sceneId = typeof scene === "string" ? scene : scene.id;
   scenes.value.forEach((scene) => {
     scene.active = scene.id === sceneId;
   });
-  saveSceneAndEmitEvent(scene);
+  emit("switchScene", scene);
 };
 
 // 进入场景
 const enterScene = (scene: any) => {
-  // 进入场景后关闭popup
-  saveSceneAndEmitEvent(scene).then(() => {
     emit("close-popup");
     emit("enterScene", scene);
-  });
-};
-
-// 提取共同逻辑：保存场景并发送事件
-const saveSceneAndEmitEvent = async (scene: { id: string; title: string; realId: string }) => {
-  // 先存储数据
-  uni.setStorage({
-    key: "SceneContent",
-    data: scene.id,
-    success: function () {
-      console.log("场景数据存储成功");
-      // 存储成功后发送事件
-      setTimeout(() => {
-        uni.$emit("sceneChange", scene);
-        console.log("已发送场景变化事件:", scene.id);
-      }, 100);
-    },
-  });
 };
 
 const getPointList = async () => {
@@ -124,25 +111,10 @@ const getPointList = async () => {
       item.realId =
         res.list.find((i: PointItem) => i.pointName === item.title)?.id || "";
     });
-    console.log(scenes.value, 'sceneContent');
   } catch (error) {}
 };
 
 onMounted(() => {
-  uni.getStorage({
-    key: "SceneContent",
-    success: function (res) {
-      if (res.data) {
-        let item = scenes.value.find((i) => i.id === res.data);
-        switchScene(item);
-      }
-    },
-    fail: function () {
-      let item = scenes.value.find((i) => i.id === "hydrogenVehicle");
-      switchScene(item);
-      console.log("未找到存储的场景ID，使用默认场景");
-    },
-  });
   getPointList();
 });
 </script>

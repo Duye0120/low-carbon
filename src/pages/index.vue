@@ -102,7 +102,7 @@
     />
     <van-dialog
       use-slot
-      @close="handleCloseDialog"
+      @cancel="handleCloseDialog"
       @confirm="handleConfirm"
       show-cancel-button
       :show="showDialog"
@@ -145,7 +145,7 @@ import config from "@/config";
 import { scoreName } from "./api/scoreName";
 import SceneContent from "@/components/SceneContent.vue";
 import { getUserInfoByOpenId } from "@/api/account";
-import { pageInfoPoint } from "./api/index";
+import { pageInfoPoint, submitWalk } from "./api/index";
 import type { PointItem } from "./api/index";
 const showSignInOverlay = ref(false);
 let showLowCarbon = ref(false);
@@ -200,15 +200,18 @@ const mapPoints = ref([
 ]);
 let winWidth = ref(0);
 let winHeight = ref(0);
-const add = (e: any) => {
-  showLowCarbon.value = false;
-  uni.setStorageSync("showLowCarbon", false);
-  uni.navigateTo({
-    url: "/report/views/index",
-  });
+const add = async (e: any) => {
+  try {
+    const res = await getWeRunData("end");
+    await submitWalkFunc("end", res);
+    uni.navigateTo({
+      url: "/report/views/index",
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 const navigatorTo = (item: string) => {
-  console.log(item);
   switch (item) {
     case "每日任务":
       showSignInOverlay.value = true;
@@ -235,7 +238,6 @@ const navigatorTo = (item: string) => {
 };
 let openTaskItem = ref({});
 const onFocus = (item: { name: string; id: string }) => {
-  console.log(item, "onFocus");
   onFocusView.value = item.name;
   openTaskItem.value = item;
 };
@@ -244,75 +246,119 @@ const removeFocus = (item: { name: string; id: string }) => {
   onFocusView.value = "";
   if (!showLowCarbon.value) {
     showDialog.value = true;
+    openTaskItem.value = item;
+    console.log({openTaskItem: openTaskItem.value})
   } else {
     uni.navigateTo({
-      url: `/main/index?tab=task&pointId=${openTaskItem.value.id}&type=${openTaskItem.value.name}`,
+      url: `/main/index?tab=task&pointId=${openTaskItem.value.id}&type=${openTaskItem.value.name}&sceneId=${openTaskItem.value.key}`,
     });
-    if (!isScene.value) {
-      saveSceneAndEmitEvent(openTaskItem.value);
-    }
     openTaskItem.value = {};
   }
 };
-const enterScene = (scene: { realId: string; title: string }) => {
-  console.log(scene, "enterScene");
+const enterScene = (scene: { realId: string; title: string; id: string }) => {
+  console.log(scene);
   isScene.value = true;
   if (!showLowCarbon.value) {
     showDialog.value = true;
     openTaskItem.value = {
       id: scene.realId,
       name: scene.title,
+      key: scene.id,
     };
   } else {
     uni.navigateTo({
-      url: `/main/index?tab=scene&pointId=${scene.realId}&type=${scene.title}`,
+      url: `/main/index?tab=scene&pointId=${scene.realId}&type=${scene.title}&sceneId=${scene.id}`,
     });
     isScene.value = false;
     openTaskItem.value = {};
   }
 };
 const handleCloseDialog = () => {
-  console.log("handleCloseDialog");
   showDialog.value = false;
   isScene.value = false;
   openTaskItem.value = {};
+  console.log({openTaskItem1: openTaskItem.value})
 };
-const handleConfirm = () => {
-  console.log("handleConfirm");
-  showDialog.value = false;
-  uni.navigateTo({
-    url: `/main/index?tab=${isScene.value ? "scene" : "task"}&pointId=${
-      openTaskItem.value.id
-    }&type=${openTaskItem.value.name}`,
-  });
-  if (!isScene.value) {
-    saveSceneAndEmitEvent({
-      key: openTaskItem.value.key,
-      title: openTaskItem.value.name,
-      realId: openTaskItem.value.id,
+const handleConfirm = async () => {
+  try {
+    const res = await getWeRunData("begin");
+    await submitWalkFunc("begin", res);
+    console.log({ openTaskItem2: openTaskItem.value });
+    uni.navigateTo({
+      url: `/main/index?tab=${isScene.value ? "scene" : "task"}&pointId=${
+        openTaskItem.value.id
+      }&type=${openTaskItem.value.name}&sceneId=${openTaskItem.value.key}`,
     });
+    console.log({ openTaskItem3: openTaskItem.value });
+    isScene.value = false;
+    openTaskItem.value = {};
+    showDialog.value = false;
+  } catch (error) {
+    console.error(error);
   }
-  isScene.value = false;
-  openTaskItem.value = {};
-  showLowCarbon.value = true;
-  uni.setStorageSync("showLowCarbon", true);
 };
-const saveSceneAndEmitEvent = async (scene: { key: string; title: string; realId: string }) => {
-  console.log(scene, "saveSceneAndEmitEvent")
-  // 先存储数据
-  uni.setStorage({
-    key: "SceneContent",
-    data: scene.key,
-    success: function () {
-      console.log("场景数据存储成功");
-      // 存储成功后发送事件
-      setTimeout(() => {
-        uni.$emit("sceneChange", scene);
-        console.log("已发送场景变化事件:", scene.key);
-      }, 100);
-    },
+const getWeRunData = (type: "begin" | "end") => {
+  // #ifdef MP-WEIXIN
+  return new Promise((resolve, reject) => {
+    wx.getSetting({
+      success: (res) => {
+        if (res.authSetting["scope.werun"]) {
+          wx.getWeRunData({
+            success: (res) => {
+              resolve(res);
+            },
+            fail: (err) => {
+              reject(err);
+            },
+          });
+        } else {
+          wx.authorize({
+            scope: "scope.werun",
+            success: () => {
+              wx.getWeRunData({
+                success: (res) => {
+                  resolve(res);
+                },
+                fail: (err) => {
+                  reject(err);
+                },
+              });
+            },
+            fail: (err) => {
+              reject(err);
+            },
+          });
+        }
+      },
+      fail: (err) => {
+        reject(err);
+      },
+    });
   });
-  console.log(uni.getStorageSync("SceneContent"));
+  // #endif
+};
+const submitWalkFunc = (type: "begin" | "end", res: any) => {
+  return new Promise((resolve, reject) => {
+    try {
+      submitWalk(
+        {
+          encryptedData: res.encryptedData,
+          iv: res.iv,
+          wxId: uni.getStorageSync("uuid"),
+          sessionKey: uni.getStorageSync("sessionKey"),
+        },
+        type
+      )
+        .then((res1) => {
+          resolve(res1);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
 const nextStep = () => {
   if (step.value === 1) {
@@ -361,12 +407,12 @@ const getUserInfoFunc = async () => {
     });
     console.log({ res123123: res1 });
     info.value = res1;
+    showLowCarbon.value = res1.isNotEndReport === 1;
   } catch (error) {}
 };
 onLoad(async (query) => {
   console.log(query);
   showUsePrompt.value = query.showUsePrompt === "true";
-  getUserInfoFunc();
   const { windowWidth, windowHeight } = uni.getSystemInfoSync();
   winWidth.value = windowWidth;
   winHeight.value = windowHeight;
@@ -385,7 +431,7 @@ onLoad(async (query) => {
   // #endif
 });
 onShow(() => {
-  showLowCarbon.value = uni.getStorageSync("showLowCarbon") || false;
+  getUserInfoFunc();
 });
 </script>
 

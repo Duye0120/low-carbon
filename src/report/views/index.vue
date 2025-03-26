@@ -1,22 +1,25 @@
 <template>
   <view class="page-wrapper">
-    <view
-      class="page-wrapper-header"
-    >
+    <view class="page-wrapper-header">
       <view class="page-wrapper-header-title">
         <view class="page-wrapper-header-title-top">总减碳量：</view>
         <view class="page-wrapper-header-title-bottom"
-          >全年减少碳排放0.267kg</view
+          >全年减少碳排放{{ (yearProduceCarbonNum / 1000).toFixed(4) }}kg</view
         >
       </view>
-      <image
-        style="height: 452rpx"
-        mode="heightFix"
-        src="https://df-wechat.app.atonal.cn/fileupload/static/reportHeader.gif"
-      />
+      <view class="page-wrapper-header-gif">
+        <image
+          style="height: 452rpx"
+          mode="heightFix"
+          src="https://df-wechat.app.atonal.cn/fileupload/static/reportHeader.gif"
+        />
+        <view class="page-wrapper-header-gif-num">
+          <view class="complete-data-item-value">{{ totalNum }}g</view>
+        </view>
+      </view>
       <view
         >相当于一颗普通树木约
-        <label style="color: #01A98F">5</label>
+        <label style="color: #01a98f">{{ (totalNum / 54).toFixed(0) }}</label>
         天的固碳量</view
       >
     </view>
@@ -24,15 +27,15 @@
       <view class="complete-data">
         <view class="complete-data-item">
           <view class="complete-data-item-name">打卡点位</view>
-          <view class="complete-data-item-value">5</view>
+          <view class="complete-data-item-value">{{ itemNum }}</view>
         </view>
         <view class="complete-data-item">
           <view class="complete-data-item-name">完成任务</view>
-          <view class="complete-data-item-value">9</view>
+          <view class="complete-data-item-value">{{ taskNum }}</view>
         </view>
         <view class="complete-data-item">
           <view class="complete-data-item-name">零碳积分</view>
-          <view class="complete-data-item-value">50</view>
+          <view class="complete-data-item-value">{{ scoreNum }}</view>
         </view>
       </view>
       <view class="task-list">
@@ -59,7 +62,38 @@
       <view class="task-chart">
         <view class="task-chart-title">数据对比</view>
         <view class="task-chart-content">
-          <image src="../static/chart.png" style="width: 100%;" mode="widthFix" />
+          <view class="task-chart-content-legend">
+            <view
+              class="task-chart-content-legend-item"
+              v-for="(item, index) in legendList"
+              :key="index"
+            >
+              <view
+                class="task-chart-content-legend-item-square"
+                :style="{ backgroundColor: item.color }"
+              ></view>
+              <view class="task-chart-content-legend-item-name"
+                >{{ item.name }}：</view
+              >
+              <view class="task-chart-content-legend-item-value"
+                >{{ item.value }}g</view
+              >
+            </view>
+          </view>
+          <view class="task-chart-content-chart">
+            <van-circle
+              class="circle"
+              size="200"
+              layer-color="#eeeeee"
+              :value="percent"
+              stroke-width="30"
+            >
+              <view>
+                <view style="font-size: 32rpx; color: #3d3d3d">碳中和</view>
+                <view style="font-size: 48rpx; color: #01a98f">{{ percent }}%</view>
+              </view>
+            </van-circle>
+          </view>
         </view>
       </view>
       <button class="share-button" type="button" open-type="share" plain>
@@ -71,88 +105,32 @@
         >分享报告到微信
       </button>
     </view>
-    <!-- <view class="page-wrapper-header">
-      <image
-        src="../static/report.png"
-        style="width: 100%"
-        mode="widthFix"
-        alt=""
-      />
-    </view>
-    <view class="page-wrapper-content">
-      <view class="title">数据报告</view>
-      <view class="describe"
-        >本次行程，您参与了xxx、xxx…，共计减碳xxx，相当于种了xxx棵xx树，感谢您为低碳生活做出的贡献。</view
-      >
-      
-      <view class="statistics">减碳量统计</view>
-      <scroll-view
-        class="statistics-content"
-        :show-scrollbar="false"
-        scroll-y="true"
-      >
-        <view class="statistics-content-item">
-          <view class="statistics-content-item-left">乘坐氢能交通工具</view>
-          <view class="statistics-content-item-right">20零碳积分</view>
-        </view>
-        <view class="statistics-content-item">
-          <view class="statistics-content-item-left">乘坐氢能交通工具</view>
-          <view class="statistics-content-item-right">20零碳积分</view>
-        </view>
-        <view class="statistics-content-item">
-          <view class="statistics-content-item-left">乘坐氢能交通工具</view>
-          <view class="statistics-content-item-right">20零碳积分</view>
-        </view>
-        <view class="statistics-content-item">
-          <view class="statistics-content-item-left">乘坐氢能交通工具</view>
-          <view class="statistics-content-item-right">20零碳积分</view>
-        </view>
-        <view class="statistics-content-item">
-          <view class="statistics-content-item-left">乘坐氢能交通工具</view>
-          <view class="statistics-content-item-right">20零碳积分</view>
-        </view>
-      </scroll-view>
-    </view> -->
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-let reportList = ref([
+import { onShow } from "@dcloudio/uni-app";
+import { getReport } from "../api/index";
+import { taskList } from "../api/taskList";
+let reportList = ref([]);
+let totalNum = ref(0);
+let itemNum = ref(0);
+let taskNum = ref(0);
+let scoreNum = ref(0);
+let yearProduceCarbonNum = ref(0);
+let produceCarbonNum = ref(0);
+let percent = ref(0);
+let legendList = ref([
   {
-    doType: "乘坐",
-    name: "氢能公交",
-    resultDo: "代替",
-    sth: "传统大巴",
-    value: "446.4",
+    name: "个人产碳量",
+    value: 112,
+    color: "#D0D0D0",
   },
   {
-    doType: "骑行",
-    name: "氢能自行车",
-    resultDo: "代替",
-    sth: "燃油车",
-    value: "620",
-  },
-  {
-    doType: "走",
-    name: "发电步道",
-    resultDo: "产生",
-    sth: "3度电",
-    value: "26.4",
-  },
-  {
-    doType: "体验",
-    name: "零碳单车",
-    resultDo: "产生",
-    sth: "6度电",
-    value: "26.83",
-  },
-  {
-    doType: "饮用",
-    name: "海露水",
-    resultDo: "代替",
-    sth: "普通纯净水",
-    value: "1.6",
+    name: "个人减碳量",
+    value: 112,
+    color: "#01A98F",
   },
 ]);
 const onShareAppMessage = () => {
@@ -161,6 +139,42 @@ const onShareAppMessage = () => {
     path: "/pages/views/index",
   };
 };
+const getReportData = async () => {
+  try {
+    let res = await getReport({ wxId: uni.getStorageSync("uuid") });
+    console.log(
+      { res },
+      taskList.filter((item) => res.itemList.indexOf(item.key) > -1)
+    );
+    reportList.value = taskList.filter(
+      (item) => res.itemList.indexOf(item.key) > -1
+    );
+    reportList.value.push({
+      doType: "本次行走",
+      name: res.userStep,
+      resultDo: "步",
+      sth: "",
+      key: "walk",
+      value: res.stepCarbonNum,
+    });
+    // reportList.value = taskList;
+    itemNum.value = res.itemNum;
+    taskNum.value = res.taskNum;
+    scoreNum.value = res.scoreNum;
+    totalNum.value = res.reduceCarbonNum;
+    yearProduceCarbonNum.value = res.yearProduceCarbonNum;
+    produceCarbonNum.value = res.produceCarbonNum;
+    legendList.value[0].value = res.produceCarbonNum;
+    legendList.value[1].value = res.reduceCarbonNum;
+    percent.value = ((res.reduceCarbonNum / res.produceCarbonNum) * 100).toFixed(2)
+    console.log(reportList.value, itemNum.value, taskNum.value, scoreNum.value, legendList.value);
+  } catch (err) {
+    console.log({ err });
+  }
+};
+onShow(() => {
+  getReportData();
+});
 </script>
 
 <style scoped lang="scss">
@@ -181,13 +195,30 @@ const onShareAppMessage = () => {
     background-size: 100% 100%;
     background-position: center;
     &-title {
-      margin-top: -94rpx;
+      margin-top: -44rpx;
       width: 100%;
       &-top {
         padding: 0 50rpx;
       }
       &-bottom {
         text-align: center;
+      }
+    }
+    &-gif {
+      height: 452rpx;
+      position: relative;
+      &-num {
+        position: absolute;
+        background: url("../static/numBg.png") no-repeat;
+        background-size: 100% 100%;
+        width: 348rpx;
+        height: 72rpx;
+        bottom: 60rpx;
+        left: 110rpx;
+        color: #01a98f;
+        font-size: 38rpx;
+        text-align: center;
+        line-height: 72rpx;
       }
     }
   }
@@ -251,6 +282,9 @@ const onShareAppMessage = () => {
     }
     .task-chart {
       margin-top: 90rpx;
+      .circle {
+        // margin-top: 90rpx;
+      }
       &-title {
         padding: 0 48rpx 0 32rpx;
         font-family: PingFangSC, PingFang SC;
@@ -263,7 +297,37 @@ const onShareAppMessage = () => {
         padding: 0 48rpx 0 32rpx;
         margin-top: 46rpx;
         margin-bottom: 180rpx;
+        &-chart {
+          background: url("../static/chartBg.png") no-repeat;
+          background-size: 100% 80%;
+          background-position: bottom;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+        }
       }
+    }
+  }
+}
+
+.task-chart-content-legend {
+  display: flex;
+  justify-content: space-around;
+  &-item {
+    display: flex;
+    align-items: center;
+    &-square {
+      width: 20rpx;
+      height: 20rpx;
+      margin-right: 16rpx;
+    }
+    &-name {
+      color: #999999;
+    }
+    &-value {
+      color: #999999;
     }
   }
 }

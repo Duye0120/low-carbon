@@ -57,7 +57,6 @@ const getTicketList = async () => {
       img: config.fileUrl + JSON.parse(item.medalImg)[0].url.replace(/\\/g, "/"),
     }));
   } catch (error) {
-    console.log(error);
   }
 };
 onLoad(() => {

@@ -1,14 +1,14 @@
 import request from "@/api/request";
 
 interface PageInfo<T> {
-    total: number;
-    list: T[];
+  total: number;
+  list: T[];
 }
 
 export interface PointItem {
-    id: string;
-    pointName: string;
-    pointDesc: string;
+  id: string;
+  pointName: string;
+  pointDesc: string;
 }
 
 export function pageInfoPoint(data: { pageNum: number; pageSize: number }) {
@@ -39,6 +39,19 @@ export function getWeekSign(data: { wxId: string }) {
 export function finishSignTask(data: { wxId: string }) {
   return request<void>({
     url: "/low/carbon/task/finishSignTask",
+    method: "POST",
+    data,
+  });
+}
+
+export function submitWalk(data: {
+  encryptedData: string;
+  iv: string;
+  wxId: string;
+  sessionKey: string;
+}, type: 'begin' | 'end') {
+  return request<void>({
+    url: `/low/carbon/wx/step/${type}Submit`,
     method: "POST",
     data,
   });

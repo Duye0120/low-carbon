@@ -68,7 +68,6 @@ const selectAnswer = (item: {
   value: string;
   isRight: boolean;
 }, index: number) => {
-  console.log(item, "item");
   // if (isRight.value !== null) return;
   answer.value = item.label;
   isRight.value = item.isRight;

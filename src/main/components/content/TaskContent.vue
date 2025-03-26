@@ -36,7 +36,6 @@ const completeTask = (task: any) => {
   if (task.completed) {
     return;
   }
-  console.log(task);
   switch (task.key) {
     case 'question':
       uni.navigateTo({
@@ -52,19 +51,21 @@ const completeTask = (task: any) => {
       break;
     default:
       // 打卡
-      console.log(task);
       finishTask(task);
       break;
   }
 };
 
 const finishTask = (task: any) => {
-  console.log(task, props.pointId, '232323');
   finishClockTask({
     pointId: props.pointId,
     wxId: uni.getStorageSync("uuid"),
     clockType: task.key
   }).then(() => {
+    uni.showToast({
+      title: '打卡成功',
+      icon: 'none'
+    })
     getTask();
   })
 };
@@ -84,7 +85,7 @@ let typeTask = {
   乘坐氢能交通: [
     '氢能大巴打卡',
     '氢能自行车打卡',
-    '氢能观光车打卡',
+    '光伏充电座椅打卡',
     '每日任务·知识问答',
     '每日任务·浏览文章'
   ],
@@ -121,13 +122,11 @@ const getTask = () => {
       element.completed = item?.taskStatus === '1';
       element.taskId = item?.taskId;
     });
-    console.log(res, tasks.value);
   });
 };
 
 watch(() => props.pointId, () => {
   if (props.pointId) {
-    console.log("pointId changed to:", props.pointId);
     getTask();
   }
 });

@@ -19,6 +19,14 @@ export function pageInfoVirtualMedal(data: { wxId: string }) {
   });
 }
 
+export function pageInfoHaved(data: { wxId: string }) {
+  return request<PageInfo<PointItem>>({
+    url: "/low/carbon/medal/pageInfoVirtualMedal",
+    method: "POST",
+    data,
+  });
+}
+
 export function pageInfoRealMedal(data: { wxId: string }) {
   return request<PageInfo<PointItem>>({
     url: "/low/carbon/real/medal/pageInfoRealMedal",

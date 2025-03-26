@@ -9,7 +9,7 @@
     />
     <!-- 固定的头部区域 -->
     <view class="fixed-header">
-      <CommonHeader />
+      <CommonHeader :sceneId="sceneId" />
     </view>
 
     <view class="content" :style="{ backgroundColor: primaryColor }">
@@ -34,7 +34,7 @@
       <!-- 可滚动的内容区域 -->
       <view class="scrollable-content">
         <!-- 场景切换 -->
-        <SceneContent v-show="activeTab === 'scene'" type="page" />
+        <SceneContent :activeScene="sceneId" v-on:switchScene="handleSceneChange" v-show="activeTab === 'scene'" type="page" />
 
         <!-- 任务列表 -->
         <TaskContent
@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { ref } from "vue";
 import { onLoad, onHide, onShow } from "@dcloudio/uni-app";
 import CommonHeader from "./components/CommonHeader.vue";
 import SceneContent from "../components/SceneContent.vue";
@@ -107,64 +107,31 @@ const getCircleLeft = (activeTab: string): string => {
 
 // 场景变化处理函数
 const handleSceneChange = (scene: { id: string; title: string; realId: string }) => {
-  console.log("收到场景变化事件:", scene.value);
   primaryColor.value = getPrimaryColorByScene(scene.id);
   pointId.value = scene.realId;
   type.value = scene.title;
-  console.log("primaryColor:", primaryColor.value);
-  console.log("pointId:", pointId.value);
-  console.log("type:", type.value);
+  sceneId.value = scene.id;
 };
-
-onMounted(() => {
-  // 在组件挂载时设置事件监听
-  uni.$on("sceneChange", handleSceneChange);
-});
-
-onUnmounted(() => {
-  // 在组件卸载时移除事件监听
-  uni.$off("sceneChange", handleSceneChange);
-});
 let pointId = ref("");
 let type = ref("");
+let sceneId = ref("");
 onLoad((query) => {
-  console.log("Page loaded with query:", query);
   if (query && query.tab) {
     activeTab.value = query.tab;
-  } else {
-    console.log("No tab option found in the query, using default tab.");
   }
-  if (query && query.pointId && query.type) {
-    pointId.value = query.pointId;
-    type.value = query.type;
-    console.log("pointId:", pointId.value);
-  }
-  // 页面加载时从URL参数中获取选中的选项卡
-  console.log("CommonHeader 组件已加载");
-  // 初始化时从存储中获取场景ID
-  uni.getStorage({
-    key: "SceneContent",
-    success: function (res) {
-      if (res.data) {
-        console.log("从存储中获取到场景ID:", res.data);
-        primaryColor.value = getPrimaryColorByScene(res.data);
-      }
-    },
-    fail: function () {
-      console.log("未找到存储的场景ID，使用默认场景");
-      primaryColor.value = getPrimaryColorByScene("hydrogenVehicle");
-    },
-  });
+  pointId.value = query?.pointId;
+  type.value = query?.type;
+  sceneId.value = query?.sceneId;
+  console.log(sceneId.value);
+  primaryColor.value = getPrimaryColorByScene(sceneId.value);
 });
 
 onHide(() => {
-  console.log("页面隐藏");
   reLoad.value = false;
 });
 
 onShow(() => {
   statusBarHeight.value = uni.getWindowInfo().statusBarHeight + 10;
-  console.log("statusBarHeight:", statusBarHeight.value);
   if (activeTab.value === 'task') {
     reLoad.value = true;
   }

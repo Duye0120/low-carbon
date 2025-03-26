@@ -131,7 +131,9 @@
       "van-popup": "/wxcomponents/vant/popup/index",
       "van-cell-group": "/wxcomponents/vant/cell-group/index",
       "van-cell": "/wxcomponents/vant/cell/index",
-      "van-dialog": "/wxcomponents/vant/dialog/index"
+      "van-dialog": "/wxcomponents/vant/dialog/index",
+      "van-count-down": "/wxcomponents/vant/count-down/index",
+      "van-circle": "/wxcomponents/vant/circle/index"
     },
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
